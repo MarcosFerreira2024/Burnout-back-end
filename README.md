@@ -4,7 +4,7 @@
 
 <div>
   <a href="#requisitosFuncionais">Requisitos Funcionais</a>
-  <a href="#requisitosNaoFuncionais">Requisitos Funcionais</a>
+  <a href="#requisitosNaoFuncionais">Requisitos Não Funcionais</a>
 </div>
 
 
