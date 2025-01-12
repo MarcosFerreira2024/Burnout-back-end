@@ -5,6 +5,7 @@
 <div>
   <a href="#requisitosFuncionais">Requisitos Funcionais</a>
   <a href="#requisitosNaoFuncionais">Requisitos Não Funcionais</a>
+  <a href="#prototipo">Protótipo</a>
 </div>
 
 
@@ -425,5 +426,12 @@
   <p>Prioridade: <strong>Média</strong></p>
   <p>Concluido: <strong>false</strong></p>
 ##
+
+</div>
+
+<div id="prototipo">
+  <h2>Protótipo</h2>
+
+  <a href="https://www.figma.com/design/cS5OwI5VklAYnixpp1tDH5/Projeto-Burnout?node-id=0-1&t=h22oL0Hn9ENtmt0l-1">Figma</a>
 
 </div>
