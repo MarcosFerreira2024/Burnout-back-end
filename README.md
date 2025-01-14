@@ -43,14 +43,15 @@
   <p>Critérios de Aceitação:</p>
 
   <ul>
-    <li>O login deve ser bem-sucedido quando o e-mail e a senha estiverem corretos.</li>
-    <li>Dados sensiveis devem ser criptografados </li>
-    <li>O sistema deve exibir uma mensagem de erro se as credenciais estiverem incorretas.</li>
+    <li>O login deve ser bem-sucedido quando o e-mail e senha estiverem corretos  ✅</li>
+    <li>No primeiro login é necessário verificar o email ✅ <li>
+    <li>Dados sensiveis devem ser criptografados ✅ </li>
+    <li>O sistema deve exibir uma mensagem de erro se as credenciais estiverem incorretas. ✅</li>
   </ul> 
 
   <p>Prioridade: <strong>Alta</strong></p>
   
-  <p>Concluido: <strong>false</strong></p>
+  <p>Concluido: <strong>true</strong></p>
 
 ##
 </div>
