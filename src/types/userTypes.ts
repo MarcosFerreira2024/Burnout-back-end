@@ -10,3 +10,9 @@ interface createCode {
     } | null;
     id: string;
 }
+
+interface JWT {
+    email: string,
+    id: string
+
+}
