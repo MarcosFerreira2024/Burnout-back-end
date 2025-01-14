@@ -125,7 +125,7 @@ export const sendVerificationCode = async (email: string, code: string) => {
                     <div>
                         <h1 class="titulo">Bem vindo a Burnout</h1>
                         <div class="conteudo">
-                            <p>Codigo de Verificação: </p>
+                            <p>Código de Verificação: </p>
                             <span>${code}</span>
                         </div>
 
