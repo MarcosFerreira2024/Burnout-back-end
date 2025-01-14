@@ -7,9 +7,11 @@ const ErrorMessage = {
 
     emailTypeError: "Email Invalido",
 
-    emailSizeError: "Seu Email deve conter pelo menos 8 caracteres",
+    emailSizeError: "Seu Email deve conter pelo menos 7 caracteres",
 
     nameSizeError: "Seu nome deve conter pelo menos 2 caracteres",
+
+    codeSizeError: "Código não contém 19 digitos"
 }
 
 
