@@ -37,6 +37,9 @@ export const CreateUserModel = async (data: Prisma.usersCreateInput) => {
             const code = await createToken(createdUser)
             return code
         }
+        if (user.status === true) {
+            throw new Error("O usuario já existe")
+        }
         const newCode = await createToken(user)
         return newCode
 
