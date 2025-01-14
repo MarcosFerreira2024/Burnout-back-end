@@ -16,3 +16,9 @@ interface JWT {
     id: string
 
 }
+
+interface CompareJWT extends JWT {
+    password: string,
+
+
+}
