@@ -23,14 +23,14 @@
   <p>Critérios de Aceitação:</p>
 
   <ul>
-    <li>O sistema deve impedir o cadastro de e-mails duplicados.</li>
-    <li>O sistema deve enviar um email com um código para confirmação do email.</li>
-    <li>O cadastro deve ser bem-sucedido após o preenchimento correto dos campos obrigatórios e a confirmação do email.</li>
+    <li>O sistema deve impedir o cadastro de e-mails duplicados ✅.</li>
+    <li>O sistema deve enviar um email com um código para confirmação do email ✅.</li>
+    <li>O cadastro deve ser bem-sucedido após o preenchimento correto dos campos obrigatórios e a confirmação do email ✅.</li>
   </ul>
 
   <p>Prioridade: <strong>Alta</strong></p>
 
-  <p>Concluido: <strong>false</strong></p>
+  <p>Concluido: <strong>true</strong></p>
 
 ##
 </div>
