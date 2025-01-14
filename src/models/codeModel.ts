@@ -28,3 +28,16 @@ export const updateCode = async (id: string, data: Prisma.codeUpdateInput) => {
 
     }
 }
+
+export const deleteCode = async (id: string) => {
+    const deleted = await prisma.code.delete({
+        where: {
+            id
+        }
+    })
+    if (deleted) {
+        return deleted
+    }
+    return
+
+}
