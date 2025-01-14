@@ -14,17 +14,20 @@ datasource db {
 }
 
 model users {
-  id       String        @id @map("_id") @db.ObjectId
+  id       String        @id @default(auto()) @map("_id") @db.ObjectId
   name     String
+  password String
+  status   Boolean       @default(false)
   email    String        @unique
   fav      favoritos[]
   comments comentarios[]
+  code     code?
 
   @@map("Users")
 }
 
 model favoritos {
-  id        String   @id @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   userId    String   @db.ObjectId
   productId String   @db.ObjectId
   user      users    @relation(fields: [userId], references: [id])
@@ -34,7 +37,7 @@ model favoritos {
 }
 
 model produtos {
-  id        String        @id @map("_id") @db.ObjectId
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   size      String
   colorName String
@@ -53,7 +56,7 @@ model produtos {
 }
 
 model comentarios {
-  id         String   @id @map("_id") @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   comment    String
   produtosId String   @db.ObjectId
   userId     String   @db.ObjectId
@@ -66,4 +69,15 @@ model comentarios {
   updatedAt  DateTime @updatedAt
 
   @@map("Comentarios")
+}
+
+model code {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  used      Boolean  @default(false)
+  userId    String   @unique @db.ObjectId
+  user      users    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@map("Codes")
 }
