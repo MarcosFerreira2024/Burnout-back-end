@@ -3,10 +3,10 @@ import ErrorMessage from "../consts/ErrorMessages"
 
 
 
-export const userSchema = z.object({
+export const registerUserSchema = z.object({
     name: z.string().min(2, ErrorMessage.nameSizeError),
 
-    email: z.string().min(8, ErrorMessage.emailSizeError).email(ErrorMessage.emailTypeError),
+    email: z.string().min(7, ErrorMessage.emailSizeError).email(ErrorMessage.emailTypeError),
 
     password: z.string().min(8, ErrorMessage.passwordSizeError),
 
@@ -16,4 +16,10 @@ export const userSchema = z.object({
     message: ErrorMessage.passwordMatchError,
     path: ["confirmPassword"]
 
+})
+
+export const loginSchema = z.object({
+    code: z.string().min(19, ErrorMessage.codeSizeError),
+    email: z.string().min(7, ErrorMessage.emailSizeError).email(ErrorMessage.emailTypeError),
+    password: z.string().min(8, ErrorMessage.passwordSizeError),
 })
