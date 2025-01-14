@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id       String        @id @map("_id") @db.ObjectId
+  name     String
+  email    String        @unique
+  fav      favoritos[]
+  comments comentarios[]
+
+  @@map("Users")
+}
+
+model favoritos {
+  id        String   @id @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  productId String   @db.ObjectId
+  user      users    @relation(fields: [userId], references: [id])
+  product   produtos @relation(fields: [productId], references: [id])
+
+  @@map("Favoritos")
+}
+
+model produtos {
+  id        String        @id @map("_id") @db.ObjectId
+  name      String
+  size      String
+  colorName String
+  colorHex  String
+  rating    String
+  slug      String        @unique
+  frete     String
+  category  String[]
+  price     Int
+  fav       favoritos[]
+  comments  comentarios[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("Produtos")
+}
+
+model comentarios {
+  id         String   @id @map("_id") @db.ObjectId
+  comment    String
+  produtosId String   @db.ObjectId
+  userId     String   @db.ObjectId
+  user       users    @relation(fields: [userId], references: [id])
+  produto    produtos @relation(fields: [produtosId], references: [id])
+  likes      Int
+  deslikes   Int
+  response   String[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("Comentarios")
+}
