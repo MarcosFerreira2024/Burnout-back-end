@@ -1,6 +1,62 @@
 import prisma from "../lib/prismaClient";
 
-const ValidationCode = async (user: createCode) => {
+export async function createToken(user: createCode) {
+    //verifica se existe o user.code
+    try {
+        if (user.code && user.code.used === false) {
+            const code = await prisma.code.findUnique({
+                where: {
+                    id: user.code.id
+                },
+                select: {
+                    id: true,
+                    expiresAt: true,
+                    used: true,
+
+                }
+            })
+            if (code && code.expiresAt < new Date()) {
+                const deleteCode = await prisma.code.delete({
+                    where: {
+                        id: user.code.id
+                    }
+                })
+                //criar novo código
+                if (deleteCode) {
+                    const code = await ValidationCode(user)
+
+                    if (!(code instanceof Error)) {
+                        return { email: user.email, code: code.id }
+                    }
+                    throw new Error(code.message)
+
+                }
+                throw new Error("Erro Interno")
+
+            }
+            if (user.code.expiresAt > new Date()) {
+
+                throw new Error("Verifique seu email")
+
+            }
+        }
+
+        const code = await ValidationCode(user)
+        if (!(code instanceof Error)) {
+            return { email: user.email, code: code.id }
+        }
+        throw new Error(code.message)
+    } catch (e) {
+        if (e instanceof Error) {
+            throw new Error(e.message)
+        }
+        throw new Error("Erro Desconhecido")
+    }
+
+
+}
+
+export const ValidationCode = async (user: createCode) => {
     const code = await createVerificationCode(user)
 
     if (!(code instanceof Error)) {
@@ -22,7 +78,8 @@ export async function createVerificationCode(user: createCode) {
                 expiresAt,
             },
             select: {
-                id: true
+                id: true,
+                used: true
             }
 
 
@@ -36,8 +93,5 @@ export async function createVerificationCode(user: createCode) {
 
 }
 
-
-
-export default ValidationCode
 
 
