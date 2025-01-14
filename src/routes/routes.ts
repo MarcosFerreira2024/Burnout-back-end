@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { CreateUser } from "../controllers/userController"
+import { CreateUser, login } from "../controllers/userController"
 
 
 const route = Router()
@@ -34,6 +34,6 @@ route.get("/api/routes", (req, res) => { // listar todas as rotas
 
 route.post("/api/register", CreateUser)
 
-//route.post("/api/login", verifyUser)
+route.post("/api/login", login)
 
 export default route
