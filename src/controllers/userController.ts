@@ -4,8 +4,8 @@ import HTTP_STATUS from "../consts/HttpStatus";
 import { CreateUserModel, findUser, updateUser } from "../models/userModel";
 import { sendVerificationCode } from "../services/sendVerificationCode";
 import bcrypt from "bcrypt"
-import { updateCode } from "../models/codeModel";
-import { createJWT } from "../services/createJWT";
+import { deleteCode, updateCode } from "../models/codeModel";
+import { createJWT, validatePasswordToCreateJWT } from "../services/createJWT";
 
 export const CreateUser: RequestHandler = async (req, res) => {
 
@@ -44,6 +44,7 @@ export const CreateUser: RequestHandler = async (req, res) => {
                 message: "Código Enviado para o Email"
             })
         }
+        return
 
 
     }
@@ -70,52 +71,76 @@ export const CreateUser: RequestHandler = async (req, res) => {
 export const login: RequestHandler = async (req, res) => {
 
     //pegar os dados de email, senha e o codigo
-    const dados = loginSchema.safeParse(req.body)
+    const partialValidation = loginSchema.omit({ code: true }).safeParse(req.body)
 
-    if (dados.success) {
+    if (partialValidation.success) {
         try {
-            const user = await findUser(dados.data.email)
-
-            if (user && user.code && user.code.used === false) {
-                //verificar se o email corresponde a um usuário, se a senha corresponde a senha do usuario no banco de dados e se o codigo é o msm q foi enviado para o email
-                const comparedPassword = await bcrypt.compare(dados.data.password, user.password)
-                const comparedCode = user.code?.id === req.body.code
-                if (!comparedPassword) {
+            const user = await findUser(partialValidation.data.email)
+            if (!user) {
+                res.status(HTTP_STATUS.BAD_REQUEST).json({
+                    message: "Usuário não existe, registre-se"
+                })
+                return
+            }
+            if (user && user.status === true) {
+                const jwt = await validatePasswordToCreateJWT(partialValidation.data.password, user)
+                if (user.code) {
+                    await deleteCode(user.code?.id as string)
+                }
+                if (jwt instanceof Error) {
                     res.status(HTTP_STATUS.BAD_REQUEST).json({
-                        message: "Dados Incorretos"
+                        message: jwt.message
                     })
                     return
+
                 }
+                res.status(HTTP_STATUS.OK).json({
+                    token: jwt
+                })
+                return
+            }
+
+            const fullValidation = loginSchema.safeParse(req.body)
+            if (fullValidation.error) {
+                res.status(HTTP_STATUS.BAD_REQUEST).json({
+                    message: fullValidation.error.flatten().fieldErrors
+                })
+                return
+            }
+            if (user.code && user.code.used === false) {
+                //verificar se o email corresponde a um usuário, se a senha corresponde a senha do usuario no banco de dados e se o codigo é o msm q foi enviado para o email
+                const comparedCode = user.code?.id === req.body.code
                 if (!comparedCode) {
                     res.status(HTTP_STATUS.BAD_REQUEST).json({
                         message: "Código Invalido"
                     })
                     return
                 }
-                //após verificar esses dados gerar um jwt com o email e o id do usuário e setar o status do usuário e do code para true
-                const token = createJWT(user)
-                res.status(HTTP_STATUS.OK).json({
-                    token
+                const token = await validatePasswordToCreateJWT(fullValidation.data.password, user)
+                if (token) {
+                    res.status(HTTP_STATUS.OK).json({
+                        token
+                    })
+                    const updatedUser = await updateUser(user.id, { status: true, })
+
+                    const updatedCode = await updateCode(user.code.id, { used: true, })
+
+                    res.status(HTTP_STATUS.OK).json({ updatedUser, updatedCode })
+                    return
+                }
+                res.status(HTTP_STATUS.BAD_REQUEST).json({
+                    message: "Senha Incorreta"
                 })
-                const updatedUser = await updateUser(user.id, { status: true, })
-
-                const updatedCode = await updateCode(user.code.id, { used: true, })
-
-                res.status(HTTP_STATUS.OK).json({ updatedUser, updatedCode })
                 return
 
 
 
             }
-            if (user && user.status === true) {
-                const token = createJWT(user)
 
-                res.status(HTTP_STATUS.OK).json({
-                    token
-                })
-                return
-            }
-            throw new Error("Usuário Nao Encontrado")
+
+
+
+
         } catch {
             res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
                 message: "Erro interno"
@@ -124,7 +149,7 @@ export const login: RequestHandler = async (req, res) => {
         }
     }
     res.status(HTTP_STATUS.BAD_REQUEST).json({
-        message: dados.error?.flatten().fieldErrors
+        message: partialValidation.error?.flatten().fieldErrors
     })
     return
 
