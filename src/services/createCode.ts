@@ -1,4 +1,5 @@
 import prisma from "../lib/prismaClient";
+import { deleteCode } from "../models/codeModel";
 
 export async function createToken(user: createCode) {
     //verifica se existe o user.code
@@ -16,13 +17,9 @@ export async function createToken(user: createCode) {
                 }
             })
             if (code && code.expiresAt < new Date()) {
-                const deleteCode = await prisma.code.delete({
-                    where: {
-                        id: user.code.id
-                    }
-                })
+                const deleted = await deleteCode(code.id)
                 //criar novo código
-                if (deleteCode) {
+                if (deleted) {
                     const code = await ValidationCode(user)
 
                     if (!(code instanceof Error)) {
