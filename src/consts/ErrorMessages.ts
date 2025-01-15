@@ -11,7 +11,11 @@ const ErrorMessage = {
 
     nameSizeError: "Seu nome deve conter pelo menos 2 caracteres",
 
-    codeSizeError: "Código não contém 19 digitos"
+    codeSizeError: "Código não contém 24 digitos",
+
+    idSizeError: "Id não contém 24 digitos",
+
+    tokenSizeError: "Token não contém 172 caracteres"
 }
 
 
