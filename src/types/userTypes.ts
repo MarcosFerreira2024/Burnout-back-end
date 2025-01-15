@@ -22,3 +22,8 @@ interface CompareJWT extends JWT {
 
 
 }
+
+interface JWTPayloadToken {
+    email: string,
+    id: string
+}
