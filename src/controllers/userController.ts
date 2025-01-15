@@ -84,9 +84,6 @@ export const login: RequestHandler = async (req, res) => {
             }
             if (user && user.status === true) {
                 const jwt = await validatePasswordToCreateJWT(partialValidation.data.password, user)
-                if (user.code) {
-                    await deleteCode(user.code?.id as string)
-                }
                 if (jwt instanceof Error) {
                     res.status(HTTP_STATUS.BAD_REQUEST).json({
                         message: jwt.message
@@ -94,10 +91,14 @@ export const login: RequestHandler = async (req, res) => {
                     return
 
                 }
+                if (user.code) {
+                    await deleteCode(user.code?.id as string)
+                }
                 res.status(HTTP_STATUS.OK).json({
                     token: jwt
                 })
                 return
+
             }
 
             const fullValidation = loginSchema.safeParse(req.body)
@@ -118,14 +119,14 @@ export const login: RequestHandler = async (req, res) => {
                 }
                 const token = await validatePasswordToCreateJWT(fullValidation.data.password, user)
                 if (token) {
+
+                    await updateUser(user.id, { status: true, })
+
+                    await updateCode(user.code.id, { used: true, })
+
                     res.status(HTTP_STATUS.OK).json({
                         token
                     })
-                    const updatedUser = await updateUser(user.id, { status: true, })
-
-                    const updatedCode = await updateCode(user.code.id, { used: true, })
-
-                    res.status(HTTP_STATUS.OK).json({ updatedUser, updatedCode })
                     return
                 }
                 res.status(HTTP_STATUS.BAD_REQUEST).json({
