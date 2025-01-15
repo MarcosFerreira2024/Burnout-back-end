@@ -6,7 +6,7 @@ import { createToken } from "../services/createCode";
 export const CreateUserModel = async (data: Prisma.usersCreateInput) => {
     //verificar se o usuário existe
     try {
-        const user = await findUser(data.email)
+        const user = await findUserModel(data.email)
         if (!user) {
             const salt = 10
             //criptografar a senha antes de mandar pro banco de dados
@@ -51,7 +51,7 @@ export const CreateUserModel = async (data: Prisma.usersCreateInput) => {
     }
 }
 //função para encontrar usuário
-export const findUser = async (email: string) => {
+export const findUserModel = async (email: string) => {
     try {
         const user = await prisma.users.findUnique({
             where: {
@@ -76,7 +76,7 @@ export const findUser = async (email: string) => {
 }
 
 
-export const updateUser = async (id: string, data: Prisma.usersUpdateInput) => {
+export const updateUserModel = async (id: string, data: Prisma.usersUpdateInput) => {
 
     try {
         const updated = await prisma.users.update({
@@ -103,4 +103,27 @@ export const updateUser = async (id: string, data: Prisma.usersUpdateInput) => {
         throw new Error("Erro Interno")
 
     }
+}
+
+
+export const deleteUserModel = async (id: string) => {
+    try {
+        const deleted = await prisma.users.delete({
+            where: {
+                id
+            }
+        })
+        if (deleted) {
+            return deleted
+        }
+        throw new Error("Não foi possivel deletar o usuário")
+    } catch (e) {
+        if (e instanceof Error && e.message.includes("not found")) {
+            throw new Error("Usuário Não existe")
+        }
+        throw new Error("Erro Interno, ")
+
+    }
+
+
 }

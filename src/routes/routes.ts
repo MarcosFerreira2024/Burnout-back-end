@@ -1,5 +1,6 @@
 import { Router } from "express"
-import { CreateUser, login } from "../controllers/userController"
+import { CreateUser, deleteUser, login } from "../controllers/userController"
+import { authMiddleware } from "../middlewares/authMiddleware"
 
 
 const route = Router()
@@ -35,5 +36,8 @@ route.get("/api/routes", (req, res) => { // listar todas as rotas
 route.post("/api/register", CreateUser)
 
 route.post("/api/login", login)
+
+route.delete("/api/user", deleteUser)
+
 
 export default route

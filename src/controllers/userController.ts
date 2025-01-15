@@ -1,11 +1,13 @@
 import { RequestHandler } from "express";
 import { loginSchema, registerUserSchema } from "../schemas/userSchema";
 import HTTP_STATUS from "../consts/HttpStatus";
-import { CreateUserModel, findUser, updateUser } from "../models/userModel";
 import { sendVerificationCode } from "../services/sendVerificationCode";
 import bcrypt from "bcrypt"
-import { deleteCode, updateCode } from "../models/codeModel";
-import { createJWT, validatePasswordToCreateJWT } from "../services/createJWT";
+import JWT, { JwtPayload, verify } from "jsonwebtoken"
+import { createJWT, validatePasswordToCreateJWT, verifyJWT } from "../services/jwt";
+import { CreateUserModel, deleteUserModel, findUserModel, updateUserModel } from "../models/userModel";
+import { deleteCodeModel, updateCodeModel } from "../models/codeModel";
+import { string } from "zod";
 
 export const CreateUser: RequestHandler = async (req, res) => {
 
@@ -75,7 +77,7 @@ export const login: RequestHandler = async (req, res) => {
 
     if (partialValidation.success) {
         try {
-            const user = await findUser(partialValidation.data.email)
+            const user = await findUserModel(partialValidation.data.email)
             if (!user) {
                 res.status(HTTP_STATUS.BAD_REQUEST).json({
                     message: "Usuário não existe, registre-se"
@@ -92,7 +94,7 @@ export const login: RequestHandler = async (req, res) => {
 
                 }
                 if (user.code) {
-                    await deleteCode(user.code?.id as string)
+                    await deleteCodeModel(user.code?.id as string)
                 }
                 res.status(HTTP_STATUS.OK).json({
                     token: jwt
@@ -120,9 +122,9 @@ export const login: RequestHandler = async (req, res) => {
                 const token = await validatePasswordToCreateJWT(fullValidation.data.password, user)
                 if (token) {
 
-                    await updateUser(user.id, { status: true, })
+                    await updateUserModel(user.id, { status: true, })
 
-                    await updateCode(user.code.id, { used: true, })
+                    await updateCodeModel(user.code.id, { used: true, })
 
                     res.status(HTTP_STATUS.OK).json({
                         token
@@ -159,4 +161,48 @@ export const login: RequestHandler = async (req, res) => {
 
 
 }
+
+export const deleteUser: RequestHandler = async (req, res) => {
+
+    //receber o token 
+    try {
+        const validatedToken = verifyJWT(req.headers.authorization ? req.headers.authorization : null)
+
+        if (validatedToken instanceof Error) {
+            throw new Error(validatedToken.message)
+        }
+
+        const { id } = validatedToken as JwtPayload
+        const deleted = await deleteUserModel(id)
+
+        if (deleted instanceof Error) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                message: deleted.message
+            })
+            return
+        }
+        res.status(HTTP_STATUS.OK).json({
+            message: "Usuário deletado com sucesso"
+        })
+        return
+
+
+
+
+
+    } catch (e) {
+        if (e instanceof Error) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                message: e.message
+            })
+            return
+        }
+
+    }
+}
+
+
+
+
+
 
