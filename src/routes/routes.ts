@@ -37,7 +37,7 @@ route.post("/api/register", CreateUser)
 
 route.post("/api/login", login)
 
-route.delete("/api/user", deleteUser)
+route.delete("/api/user", authMiddleware, deleteUser)
 
 
 export default route

@@ -40,12 +40,11 @@ export function verifyJWT(authorization: string | null) {
                 return validatedToken as JWTPayloadToken
             }
         }
-        throw new Error("Nenhum Token Recebido")
+        return new Error("Nenhum Token Recebido")
 
     } catch (e) {
-        console.log(e)
         if (e instanceof Error) {
-            throw new Error(e.message)
+            return new Error(e.message)
         }
     }
 
