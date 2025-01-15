@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client"
 import prisma from "../lib/prismaClient"
 
-export const updateCode = async (id: string, data: Prisma.codeUpdateInput) => {
+export const updateCodeModel = async (id: string, data: Prisma.codeUpdateInput) => {
 
     try {
         const updated = await prisma.code.update({
@@ -29,7 +29,7 @@ export const updateCode = async (id: string, data: Prisma.codeUpdateInput) => {
     }
 }
 
-export const deleteCode = async (id: string) => {
+export const deleteCodeModel = async (id: string) => {
     const deleted = await prisma.code.delete({
         where: {
             id
@@ -39,5 +39,7 @@ export const deleteCode = async (id: string) => {
         return deleted
     }
     return
+
+
 
 }
