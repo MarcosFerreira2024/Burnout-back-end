@@ -33,7 +33,7 @@ route.get("/api/routes", (req, res) => { // listar todas as rotas
 
 })
 
-route.post("/api/register", CreateUser)
+route.post("/api/sign", CreateUser)
 
 route.post("/api/login", login)
 
