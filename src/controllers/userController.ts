@@ -1,13 +1,13 @@
-import { RequestHandler } from "express";
-import { loginSchema, registerUserSchema } from "../schemas/userSchema";
-import HTTP_STATUS from "../consts/HttpStatus";
-import { sendVerificationCode } from "../services/sendVerificationCode";
-import bcrypt from "bcrypt"
-import JWT, { JwtPayload, verify } from "jsonwebtoken"
-import { createJWT, validatePasswordToCreateJWT, verifyJWT } from "../services/jwt";
-import { CreateUserModel, deleteUserModel, findUserModel, updateUserModel } from "../models/userModel";
-import { deleteCodeModel, updateCodeModel } from "../models/codeModel";
-import { string } from "zod";
+import { RequestHandler } from "express"
+import { loginSchema, registerUserSchema } from "../schemas/userSchema"
+import HTTP_STATUS from "../consts/HttpStatus"
+import { CreateUserModel, deleteUserModel, findUserModel } from "../models/userModel"
+import { sendVerificationCode } from "../services/sendVerificationCode"
+import { validatePasswordToCreateJWT, verifyJWT } from "../services/jwt"
+import { deleteCodeModel } from "../models/codeModel"
+import { JwtPayload } from "jsonwebtoken"
+import { handleCode } from "../services/createCode"
+
 
 export const CreateUser: RequestHandler = async (req, res) => {
 
@@ -17,7 +17,7 @@ export const CreateUser: RequestHandler = async (req, res) => {
     // verificar os dados
     if (dados.error) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
-            message: dados.error.flatten().fieldErrors
+            message: dados.error.issues[0].message
         })
         return
     }
@@ -27,7 +27,6 @@ export const CreateUser: RequestHandler = async (req, res) => {
 
         const user = await CreateUserModel(data)
 
-        // verificar se oq chegou foi um erro ou o usuario e retornar um json 
         if (user instanceof Error) {
             res.status(HTTP_STATUS.BAD_REQUEST).json({
                 message: user.message
@@ -38,7 +37,6 @@ export const CreateUser: RequestHandler = async (req, res) => {
         if (!user) {
             throw new Error("Erro Interno")
         }
-
         const email = await sendVerificationCode(user.email, user.code)
 
         if (email) {
@@ -73,19 +71,17 @@ export const CreateUser: RequestHandler = async (req, res) => {
 export const login: RequestHandler = async (req, res) => {
 
     //pegar os dados de email, senha e o codigo
-    const partialValidation = loginSchema.omit({ code: true }).safeParse(req.body)
+    const validation = loginSchema.safeParse(req.body)
 
-    if (partialValidation.success) {
+    if (validation.success) {
         try {
-            const user = await findUserModel(partialValidation.data.email)
-            if (!user) {
-                res.status(HTTP_STATUS.BAD_REQUEST).json({
-                    message: "Usuário não existe, registre-se"
-                })
+            const user = await findUserModel(validation.data.email)
+            if (user instanceof Error) {
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: user.message })
                 return
             }
-            if (user && user.status === true) {
-                const jwt = await validatePasswordToCreateJWT(partialValidation.data.password, user)
+            if (user.status === true) {
+                const jwt = await validatePasswordToCreateJWT(validation.data.password, user)
                 if (jwt instanceof Error) {
                     res.status(HTTP_STATUS.BAD_REQUEST).json({
                         message: jwt.message
@@ -103,42 +99,26 @@ export const login: RequestHandler = async (req, res) => {
 
             }
 
-            const fullValidation = loginSchema.safeParse(req.body)
-            if (fullValidation.error) {
-                res.status(HTTP_STATUS.BAD_REQUEST).json({
-                    message: fullValidation.error.flatten().fieldErrors
+
+            const code = await handleCode(user)
+
+            if (code instanceof Error) {
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: code.message })
+                return
+            }
+
+            if (code.email) {
+                const email = await sendVerificationCode(code.email, code.code as string)
+                res.status(HTTP_STATUS.OK).json({
+                    message: email
                 })
                 return
             }
-            if (user.code && user.code.used === false) {
-                //verificar se o email corresponde a um usuário, se a senha corresponde a senha do usuario no banco de dados e se o codigo é o msm q foi enviado para o email
-                const comparedCode = user.code?.id === req.body.code
-                if (!comparedCode) {
-                    res.status(HTTP_STATUS.BAD_REQUEST).json({
-                        message: "Código Invalido"
-                    })
-                    return
-                }
-                const token = await validatePasswordToCreateJWT(fullValidation.data.password, user)
-                if (token) {
 
-                    await updateUserModel(user.id, { status: true, })
-
-                    await updateCodeModel(user.code.id, { used: true, })
-
-                    res.status(HTTP_STATUS.OK).json({
-                        token
-                    })
-                    return
-                }
-                res.status(HTTP_STATUS.BAD_REQUEST).json({
-                    message: "Senha Incorreta"
-                })
-                return
-
-
-
-            }
+            res.status(HTTP_STATUS.OK).json({
+                message: "Insira o código que foi enviado ao seu email",
+            })
+            return
 
 
 
@@ -152,7 +132,7 @@ export const login: RequestHandler = async (req, res) => {
         }
     }
     res.status(HTTP_STATUS.BAD_REQUEST).json({
-        message: partialValidation.error?.flatten().fieldErrors
+        message: validation.error?.issues[0].message
     })
     return
 

@@ -1,13 +1,14 @@
-import { Prisma } from "@prisma/client";
-import prisma from "../lib/prismaClient";
+import { Prisma } from "@prisma/client"
 import bcrypt from "bcrypt"
-import { createToken } from "../services/createCode";
+import prisma from "../lib/prismaClient"
+import { handleCode } from "../services/createCode"
 
 export const CreateUserModel = async (data: Prisma.usersCreateInput) => {
     //verificar se o usuário existe
     try {
         const user = await findUserModel(data.email)
-        if (!user) {
+
+        if (user instanceof Error && user.message === "Usuário não foi encontrado") {
             const salt = 10
             //criptografar a senha antes de mandar pro banco de dados
             const hashedPassword = await bcrypt.hash(data.password, salt) as unknown as string
@@ -34,21 +35,38 @@ export const CreateUserModel = async (data: Prisma.usersCreateInput) => {
             if (!createdUser) {
                 throw new Error("Ocorreu um erro ao criar o usuário")
             }
-            const code = await createToken(createdUser)
+            const code = await handleCode(createdUser)
+
+            if (code instanceof Error) throw new Error(code.message)
+
             return code
+
         }
-        if (user.status === true) {
-            throw new Error("O usuario já existe")
-        }
-        const newCode = await createToken(user)
+
+        if (user instanceof Error) throw new Error(user.message)
+
+        if (user.status === true) throw new Error("O usuario já existe")
+
+        const newCode = await handleCode(user)
+
+        if (newCode instanceof Error) throw new Error(newCode.message)
+
         return newCode
+
+
+
+
+
+
+
 
     } catch (e) {
         if (e instanceof Error) {
-            throw new Error(e.message)
+            return new Error(e.message)
         }
-        throw new Error("Erro Desconhecido")
+        return new Error("Erro Desconhecido")
     }
+
 }
 //função para encontrar usuário
 export const findUserModel = async (email: string) => {
@@ -66,12 +84,14 @@ export const findUserModel = async (email: string) => {
             }
 
         })
+        if (!user) throw new Error("Usuário não foi encontrado")
         return user
+
     } catch (e) {
         if (e instanceof Error) {
-            throw new Error(e.message)
+            return new Error(e.message)
         }
-        throw new Error("Erro Desconhecido")
+        return new Error("Erro Desconhecido")
     }
 }
 
@@ -100,7 +120,7 @@ export const updateUserModel = async (id: string, data: Prisma.usersUpdateInput)
         if (e instanceof Error) {
             return e.message
         }
-        throw new Error("Erro Interno")
+        return new Error("Erro Interno")
 
     }
 }
@@ -121,7 +141,7 @@ export const deleteUserModel = async (id: string) => {
         if (e instanceof Error && e.message.includes("not found")) {
             throw new Error("Usuário Não existe")
         }
-        throw new Error("Erro Interno, ")
+        throw new Error("Erro Interno")
 
     }
 

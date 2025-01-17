@@ -1,6 +1,7 @@
 import { Router } from "express"
 import { CreateUser, deleteUser, login } from "../controllers/userController"
 import { authMiddleware } from "../middlewares/authMiddleware"
+import { verifyCode } from "../controllers/codeController"
 
 
 const route = Router()
@@ -34,6 +35,8 @@ route.get("/api/routes", (req, res) => { // listar todas as rotas
 })
 
 route.post("/api/sign", CreateUser)
+
+route.post("/api/code", verifyCode)
 
 route.post("/api/login", login)
 

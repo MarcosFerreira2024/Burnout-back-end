@@ -7,7 +7,7 @@ import route from "./routes/routes"
 
 dotenv.config()
 
-const porta = process.env.PORTA || 3000
+const porta = process.env.PORTA || 3001
 const server = express()
 
 server.use(helmet())

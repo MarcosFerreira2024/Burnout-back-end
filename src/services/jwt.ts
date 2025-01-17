@@ -23,7 +23,7 @@ export async function validatePasswordToCreateJWT(password: string, user: Compar
         if (e instanceof Error) {
             return new Error(e.message)
         }
-        throw new Error("Erro Interno")
+        return new Error("Erro Interno")
 
     }
 
@@ -40,12 +40,13 @@ export function verifyJWT(authorization: string | null) {
                 return validatedToken as JWTPayloadToken
             }
         }
-        return new Error("Nenhum Token Recebido")
+        throw new Error("Nenhum Token Recebido")
 
     } catch (e) {
         if (e instanceof Error) {
             return new Error(e.message)
         }
+        return new Error("Erro Interno")
     }
 
 

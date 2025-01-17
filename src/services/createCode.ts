@@ -1,7 +1,7 @@
 import prisma from "../lib/prismaClient";
 import { deleteCodeModel } from "../models/codeModel";
 
-export async function createToken(user: createCode) {
+export async function handleCode(user: handleCode) {
     //verifica se existe o user.code
     try {
         if (user.code && user.code.used === false) {
@@ -19,7 +19,7 @@ export async function createToken(user: createCode) {
             if (code && code.expiresAt < new Date()) {
                 const deleted = await deleteCodeModel(code.id)
                 //criar novo código
-                if (deleted) {
+                if (!(deleted instanceof Error)) {
                     const code = await ValidationCode(user)
 
                     if (!(code instanceof Error)) {
@@ -45,26 +45,26 @@ export async function createToken(user: createCode) {
         throw new Error(code.message)
     } catch (e) {
         if (e instanceof Error) {
-            throw new Error(e.message)
+            return new Error(e.message)
         }
-        throw new Error("Erro Desconhecido")
+        return new Error("Erro Desconhecido")
     }
 
 
 }
 
-export const ValidationCode = async (user: createCode) => {
+export const ValidationCode = async (user: handleCode) => {
     const code = await createVerificationCode(user)
 
     if (!(code instanceof Error)) {
         return code
     }
-    throw new Error(code.message)
+    return new Error(code.message)
 }
 
 
 
-export async function createVerificationCode(user: createCode) {
+export async function createVerificationCode(user: handleCode) {
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 1)
     try {
@@ -83,7 +83,7 @@ export async function createVerificationCode(user: createCode) {
         })
         return code
     } catch {
-        throw new Error("Não foi possivel gerar um código")
+        return new Error("Não foi possivel gerar um código")
 
     }
 

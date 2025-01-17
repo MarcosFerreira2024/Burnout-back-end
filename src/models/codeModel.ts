@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client"
 import prisma from "../lib/prismaClient"
+import { findUserModel, updateUserModel } from "./userModel"
 
 export const updateCodeModel = async (id: string, data: Prisma.codeUpdateInput) => {
 
@@ -24,7 +25,7 @@ export const updateCodeModel = async (id: string, data: Prisma.codeUpdateInput) 
         if (e instanceof Error) {
             return e.message
         }
-        throw new Error("Erro Interno")
+        return new Error("Erro Interno")
 
     }
 }
@@ -42,4 +43,39 @@ export const deleteCodeModel = async (id: string) => {
 
 
 
+}
+
+
+
+export const findCodeModel = async (code: string) => {
+    try {
+        const codigo = await prisma.code.findUnique({
+            where: {
+                id: code
+            },
+            select: {
+                id: true,
+                userId: true,
+                used: true,
+                user: true
+            }
+        })
+        if (codigo) {
+            const findedUser = await findUserModel(codigo.user.email)
+
+
+            if (findedUser instanceof Error) throw new Error(findedUser.message)
+            await deleteCodeModel(codigo.id)
+            await updateUserModel(findedUser.id, { status: true })
+
+            return findedUser
+        }
+        throw new Error("Não foi possivel encontrar o codigo")
+    }
+    catch (e) {
+        if (e instanceof Error) {
+            return new Error(e.message)
+        }
+        return new Error("Erro Interno")
+    }
 }

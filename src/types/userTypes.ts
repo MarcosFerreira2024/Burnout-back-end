@@ -1,4 +1,4 @@
-interface createCode {
+interface handleCode {
     email: string;
     password: string;
     code: {
