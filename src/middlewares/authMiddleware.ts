@@ -1,18 +1,21 @@
 import { RequestHandler } from "express";
 import { verifyJWT } from "../services/jwt";
 import HTTP_STATUS from "../consts/HttpStatus";
-import { findUserModel } from "../models/userModel";
+
 
 export const authMiddleware: RequestHandler = async (req, res, next) => {
 
     //receber o token e ver se o usuário relacionado a ele já verificou o email
     try {
-        const token = verifyJWT(req.headers.authorization ? req.headers.authorization : null) as JWTPayloadToken
+        if (!req.headers.authorization) throw new Error("Sem Token")
+
+        const token = verifyJWT(req.headers.authorization)
 
 
 
 
-        if (token instanceof Error && token === undefined) {
+
+        if (token instanceof Error) {
 
             res.status(HTTP_STATUS.UNAUTHORIZED).json({
                 message: "Você precisa estar logado"
@@ -22,12 +25,8 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
 
         next()
     } catch (e) {
-        if (e instanceof Error) {
-            res.status(HTTP_STATUS.BAD_REQUEST).json({
-                message: e.message
-            })
-            return
-        }
+        if (e instanceof Error) res.status(HTTP_STATUS.BAD_REQUEST).json({ message: e.message })
+
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
             message: "Erro Interno"
         })
