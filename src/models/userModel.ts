@@ -27,14 +27,14 @@ export const CreateUserModel = async (data: Prisma.usersCreateInput) => {
                     password: true,
                     status: true,
                     code: true,
+                    photo: true
 
                 }
 
             })
 
-            if (!createdUser) {
-                throw new Error("Ocorreu um erro ao criar o usuário")
-            }
+            if (!createdUser) throw new Error("Ocorreu um erro ao criar o usuário")
+
             const code = await handleCode(createdUser)
 
             if (code instanceof Error) throw new Error(code.message)
@@ -78,6 +78,7 @@ export const findUserModel = async (email: string) => {
             select: {
                 id: true,
                 email: true,
+                photo: true,
                 password: true,
                 status: true,
                 code: true,
@@ -143,6 +144,21 @@ export const deleteUserModel = async (id: string) => {
         }
         throw new Error("Erro Interno")
 
+    }
+
+
+}
+
+export const getUserModel = async (token: JWTPayloadToken) => {
+    try {
+        const user = await findUserModel(token.email)
+        if (user instanceof Error) throw new Error(user.message)
+
+        return user
+    }
+    catch (e) {
+        if (e instanceof Error) return new Error(e.message)
+        return new Error("Erro interno")
     }
 
 
