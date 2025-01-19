@@ -1,4 +1,4 @@
-import JWT, { JwtPayload } from "jsonwebtoken"
+import JWT from "jsonwebtoken"
 import bcrypt from "bcrypt"
 
 
@@ -29,18 +29,19 @@ export async function validatePasswordToCreateJWT(password: string, user: Compar
 
 }
 
-export function verifyJWT(authorization: string | null) {
+export function verifyJWT(authorization: string) {
     try {
-        if (authorization !== null) {
-            const token = authorization.split(" ")[1]
+        const token = authorization.split(" ")[1]
 
-            const validatedToken = JWT.verify(token, process.env.MY_SECRET_KEY as string)
+        const validatedToken = JWT.verify(token, process.env.MY_SECRET_KEY as string)
 
-            if (typeof validatedToken === "object") {
-                return validatedToken as JWTPayloadToken
-            }
+        if (typeof validatedToken === "string") {
+            throw new Error("Token inválido")
         }
-        throw new Error("Nenhum Token Recebido")
+
+        return validatedToken as JWT
+
+
 
     } catch (e) {
         if (e instanceof Error) {
