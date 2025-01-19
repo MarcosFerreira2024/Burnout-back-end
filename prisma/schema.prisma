@@ -16,6 +16,7 @@ datasource db {
 model users {
   id       String        @id @default(auto()) @map("_id") @db.ObjectId
   name     String
+  photo    String?
   password String
   status   Boolean       @default(false)
   email    String        @unique
