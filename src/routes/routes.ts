@@ -2,7 +2,7 @@ import { Router } from "express"
 import { CreateUser, deleteUser, getUser, login } from "../controllers/userController"
 import { authMiddleware } from "../middlewares/authMiddleware"
 import { verifyCode } from "../controllers/codeController"
-import { createProduct, deleteProduct, getAllProducts, updateProduct } from "../controllers/productController"
+import { createProduct, deleteProduct, getAllProducts, getOneProduct, updateProduct } from "../controllers/productController"
 
 
 const route = Router()
@@ -12,22 +12,33 @@ route.get("/api/routes", (req, res) => { // listar todas as rotas
         rotas: [
             {
                 GET: [
+                    "/api/ping",
+                    "/api/produtos",
+                    "/api/user",
+                    "/api/produto:id",
 
                 ]
             },
             {
                 POST: [
+                    "/api/sign",
+                    "/api/login",
+                    "/api/code",
+                    "/api/produto",
+
 
                 ]
             },
             {
                 UPDATE: [
+                    "/api/produto:id",
 
                 ]
             },
             {
                 DELETE: [
-
+                    "/api/produto:id",
+                    "/api/user"
                 ]
             }
         ]
@@ -52,6 +63,8 @@ route.delete("/api/user", authMiddleware, deleteUser)
 route.post("/api/produto", authMiddleware, createProduct)
 
 route.get("/api/produtos", authMiddleware, getAllProducts)
+
+route.get("/api/produto/:id", authMiddleware, getOneProduct)
 
 route.delete("/api/produto/:id", authMiddleware, deleteProduct)
 
