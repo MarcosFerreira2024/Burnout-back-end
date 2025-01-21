@@ -14,15 +14,16 @@ datasource db {
 }
 
 model users {
-  id       String        @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  photo    String?
-  password String
-  status   Boolean       @default(false)
-  email    String        @unique
-  fav      favoritos[]
-  comments comentarios[]
-  code     code?
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  photo      String?
+  password   String
+  status     Boolean       @default(false)
+  email      String        @unique
+  fav        favoritos[]
+  comments   comentarios[]
+  code       code?
+  avaliacoes avaliacoes[]
 
   @@map("Users")
 }
@@ -38,36 +39,45 @@ model favoritos {
 }
 
 model produtos {
-  id        String        @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  size      String
-  colorName String
-  colorHex  String
-  rating    String
-  slug      String        @unique
-  frete     String
-  category  String[]
-  price     Int
-  fav       favoritos[]
-  comments  comentarios[]
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  name       String        @unique
+  price      String
+  size       String[]
+  photo      String
+  colorName  String
+  colorHex   String
+  category   String[]
+  frete      String
+  rating     Float?        @default(5.0)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  fav        favoritos[]
+  comments   comentarios[]
+  avaliacoes avaliacoes[]
 
   @@map("Produtos")
 }
 
+model avaliacoes {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  productId String   @db.ObjectId
+  user      users    @relation(fields: [userId], references: [id])
+  product   produtos @relation(fields: [productId], references: [id])
+}
+
 model comentarios {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  comment    String
-  produtosId String   @db.ObjectId
-  userId     String   @db.ObjectId
-  user       users    @relation(fields: [userId], references: [id])
-  produto    produtos @relation(fields: [produtosId], references: [id])
-  likes      Int
-  deslikes   Int
-  response   String[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  comment   String
+  productId String   @db.ObjectId
+  userId    String   @db.ObjectId
+  user      users    @relation(fields: [userId], references: [id])
+  produto   produtos @relation(fields: [productId], references: [id])
+  likes     Int
+  deslikes  Int
+  response  String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("Comentarios")
 }
