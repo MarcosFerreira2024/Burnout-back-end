@@ -1,7 +1,8 @@
 import { RequestHandler } from "express";
 import HTTP_STATUS from "../consts/HttpStatus";
-import { createProductModel, getAllProductsModel } from "../models/productModel";
 import { productSchema } from "../schemas/productSchema";
+import { createProductModel, deleteProductModel, getAllProductsModel, updateProductModel } from "../models/productModel";
+import { object } from "zod";
 
 export const createProduct: RequestHandler = async (req, res) => {
 
@@ -24,7 +25,6 @@ export const createProduct: RequestHandler = async (req, res) => {
             return
         }
 
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Erro Interno" })
         return
 
     }
@@ -46,5 +46,52 @@ export const getAllProducts: RequestHandler = async (req, res) => {
         if (e instanceof Error) {
             res.status(HTTP_STATUS.BAD_REQUEST).json({ message: e.message })
         }
+        return
     }
+}
+
+export const deleteProduct: RequestHandler = async (req, res) => {
+    const id = req.params.id
+    try {
+        const deleted = await deleteProductModel(id)
+        if (deleted instanceof Error) throw new Error(deleted.message)
+        res.status(HTTP_STATUS.OK).json(deleted)
+        return
+    } catch (e) {
+        if (e instanceof Error) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: e.message })
+            return
+        }
+        return
+    }
+}
+
+export const updateProduct: RequestHandler = async (req, res) => {
+
+    const id = req.params.id
+
+    const data = productSchema.partial().safeParse(req.query)
+
+    try {
+        if (data.error) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json(data.error.flatten().fieldErrors)
+            return
+        }
+        if (Object.keys(req.query).length === 0 || id.length === 0) throw new Error("Dados para atualização não foram encontrados")
+
+        const updated = await updateProductModel(id, data.data)
+        if (updated instanceof Error) throw new Error(updated.message)
+        res.status(HTTP_STATUS.OK).json(updated)
+        return
+
+    } catch (e) {
+        if (e instanceof Error) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: e.message })
+            return
+        }
+        return
+
+    }
+
+
 }

@@ -4,7 +4,7 @@ import prisma from "../lib/prismaClient";
 export const createProductModel = async (data: Prisma.produtosCreateInput) => {
     try {
         if (data) {
-            const verificaExistente = await findProductByName(data.name)
+            const verificaExistente = await findProduct("name", data.name)
 
             if (verificaExistente instanceof Error) {
 
@@ -32,14 +32,18 @@ export const createProductModel = async (data: Prisma.produtosCreateInput) => {
 
 }
 
-export const findProductByName = async (name: string) => {
+export const findProduct = async (identificador: "id" | "name", value: string) => {
     try {
+
+        const where = identificador === "id" ? { id: value } : identificador === "name" ? { name: value } : undefined
+
+        if (!where) throw new Error("Chave inválida para busca")
+
         const produtoEncontrado = await prisma.produtos.findUnique({
-            where: {
-                name
-            },
+            where
 
         })
+
         if (!produtoEncontrado) return new Error("Produto não foi encontrado")
 
         return produtoEncontrado
@@ -59,6 +63,43 @@ export const getAllProductsModel = async () => {
         const produtos = await prisma.produtos.findMany({})
         if (produtos) return produtos
         throw new Error("Nao foi possivel encontrar os produtos")
+    } catch (e) {
+        if (e instanceof Error) return new Error(e.message)
+        return new Error("Erro Desconhecido")
+    }
+}
+
+
+export const deleteProductModel = async (id: string) => {
+    try {
+        const produto = await findProduct("id", id)
+        if (produto instanceof Error) throw new Error(produto.message)
+        const deleted = await prisma.produtos.delete({
+            where: {
+                id
+            }
+        })
+        if (deleted) return deleted
+        throw new Error("Nao foi possivel deletar o produto")
+    } catch (e) {
+        if (e instanceof Error) return new Error(e.message)
+        return new Error("Erro Desconhecido")
+    }
+}
+
+export const updateProductModel = async (id: string, data: Prisma.produtosUpdateInput) => {
+    try {
+        const produto = await findProduct("id", id)
+        if (produto instanceof Error) throw new Error(produto.message)
+        const updated = await prisma.produtos.update({
+            where: {
+                id
+            },
+            data,
+
+        })
+        if (updated) return updated
+        throw new Error("Nao foi possivel atualizar o produto")
     } catch (e) {
         if (e instanceof Error) return new Error(e.message)
         return new Error("Erro Desconhecido")

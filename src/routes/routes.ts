@@ -2,7 +2,7 @@ import { Router } from "express"
 import { CreateUser, deleteUser, getUser, login } from "../controllers/userController"
 import { authMiddleware } from "../middlewares/authMiddleware"
 import { verifyCode } from "../controllers/codeController"
-import { createProduct, getAllProducts } from "../controllers/productController"
+import { createProduct, deleteProduct, getAllProducts, updateProduct } from "../controllers/productController"
 
 
 const route = Router()
@@ -53,7 +53,9 @@ route.post("/api/produto", authMiddleware, createProduct)
 
 route.get("/api/produtos", authMiddleware, getAllProducts)
 
+route.delete("/api/produto/:id", authMiddleware, deleteProduct)
 
+route.put("/api/produto/:id", authMiddleware, updateProduct)
 
 
 //adminMiddleware, 
