@@ -55,9 +55,6 @@ export const CreateUser: RequestHandler = async (req, res) => {
             })
             return
         }
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-            message: "Erro Interno"
-        })
         return
     }
 
@@ -178,7 +175,7 @@ export const deleteUser: RequestHandler = async (req, res) => {
             })
             return
         }
-
+        return
     }
 }
 
@@ -205,13 +202,16 @@ export const getUser: RequestHandler = async (req, res) => {
         )
     }
     catch (e) {
-        if (e instanceof Error) res.status(HTTP_STATUS.BAD_REQUEST).json({ message: e.message })
+        if (e instanceof Error) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: e.message })
 
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Erro Interno" })
+            return
+        }
+
         return
 
-
     }
+
 
 }
 
