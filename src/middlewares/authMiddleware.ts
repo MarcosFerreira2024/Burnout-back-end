@@ -25,7 +25,10 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
 
         next()
     } catch (e) {
-        if (e instanceof Error) res.status(HTTP_STATUS.BAD_REQUEST).json({ message: e.message })
+        if (e instanceof Error) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: e.message })
+            return
+        }
 
         res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
             message: "Erro Interno"
