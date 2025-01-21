@@ -1,8 +1,7 @@
 import { RequestHandler } from "express";
 import HTTP_STATUS from "../consts/HttpStatus";
 import { productSchema } from "../schemas/productSchema";
-import { createProductModel, deleteProductModel, getAllProductsModel, updateProductModel } from "../models/productModel";
-import { object } from "zod";
+import { createProductModel, deleteProductModel, getAllProductsModel, getOneProductModel, updateProductModel } from "../models/productModel";
 
 export const createProduct: RequestHandler = async (req, res) => {
 
@@ -93,5 +92,24 @@ export const updateProduct: RequestHandler = async (req, res) => {
 
     }
 
+
+}
+
+export const getOneProduct: RequestHandler = async (req, res) => {
+
+    const id = req.params.id
+
+    try {
+        const produto = await getOneProductModel(id)
+        if (produto instanceof Error) throw new Error(produto.message)
+        res.status(HTTP_STATUS.OK).json(produto)
+    } catch (e) {
+        if (e instanceof Error) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: e.message })
+            return
+        }
+        return
+
+    }
 
 }

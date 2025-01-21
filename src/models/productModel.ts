@@ -105,3 +105,14 @@ export const updateProductModel = async (id: string, data: Prisma.produtosUpdate
         return new Error("Erro Desconhecido")
     }
 }
+
+export const getOneProductModel = async (id: string) => {
+    try {
+        const produto = await findProduct("id", id)
+        if (produto instanceof Error) throw new Error(produto.message)
+        return produto
+    } catch (e) {
+        if (e instanceof Error) return new Error(e.message)
+        return
+    }
+}
