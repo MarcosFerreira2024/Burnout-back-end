@@ -1,5 +1,6 @@
 interface handleCode {
     email: string;
+    name?: string;
     password: string;
     code: {
         id: string;

@@ -77,6 +77,7 @@ export const findUserModel = async (email: string) => {
             },
             select: {
                 id: true,
+                name: true,
                 email: true,
                 photo: true,
                 password: true,

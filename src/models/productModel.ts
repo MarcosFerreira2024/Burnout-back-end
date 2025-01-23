@@ -62,11 +62,11 @@ export const getAllProductsModel = async (name?: string) => {
 
     console.log(name)
     try {
-        if (name === "Produtos") {
-            const produtos = await prisma.produtos.findMany({})
-            if (produtos) return produtos
-        }
-        if (name !== "") {
+        if (name) {
+            if (name === "Produtos") {
+                const produtos = await prisma.produtos.findMany({})
+                if (produtos) return produtos
+            }
             const produtos = await prisma.produtos.findMany({
                 where: {
                     category: {
@@ -81,6 +81,7 @@ export const getAllProductsModel = async (name?: string) => {
             throw new Error("Nao foi possivel encontrar os produtos")
         }
         throw new Error("Nao foi possivel encontrar os produtos")
+
 
     } catch (e) {
         if (e instanceof Error) return new Error(e.message)
