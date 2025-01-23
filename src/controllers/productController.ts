@@ -33,8 +33,9 @@ export const createProduct: RequestHandler = async (req, res) => {
 
 export const getAllProducts: RequestHandler = async (req, res) => {
 
+
     try {
-        const products = await getAllProductsModel()
+        const products = await getAllProductsModel(req.query.name as string)
         if (products instanceof Error) throw new Error(products.message)
 
         res.status(HTTP_STATUS.OK).json(products)

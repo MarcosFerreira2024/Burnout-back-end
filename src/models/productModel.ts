@@ -58,11 +58,30 @@ export const findProduct = async (identificador: "id" | "name", value: string) =
     }
 }
 
-export const getAllProductsModel = async () => {
+export const getAllProductsModel = async (name?: string) => {
+
+    console.log(name)
     try {
-        const produtos = await prisma.produtos.findMany({})
-        if (produtos) return produtos
+        if (name === "Produtos") {
+            const produtos = await prisma.produtos.findMany({})
+            if (produtos) return produtos
+        }
+        if (name !== "") {
+            const produtos = await prisma.produtos.findMany({
+                where: {
+                    category: {
+                        has: name
+
+                    },
+
+
+                }
+            })
+            if (produtos) return produtos
+            throw new Error("Nao foi possivel encontrar os produtos")
+        }
         throw new Error("Nao foi possivel encontrar os produtos")
+
     } catch (e) {
         if (e instanceof Error) return new Error(e.message)
         return new Error("Erro Desconhecido")

@@ -62,9 +62,9 @@ route.delete("/api/user", authMiddleware, deleteUser)
 
 route.post("/api/produto", authMiddleware, createProduct)
 
-route.get("/api/produtos", authMiddleware, getAllProducts)
+route.get("/api/produtos", getAllProducts)
 
-route.get("/api/produto/:id", authMiddleware, getOneProduct)
+route.get("/api/produto/:id", getOneProduct)
 
 route.delete("/api/produto/:id", authMiddleware, deleteProduct)
 
@@ -73,16 +73,6 @@ route.put("/api/produto/:id", authMiddleware, updateProduct)
 
 //adminMiddleware, 
 /*
-
-
-route.put("/api/produto:id", authMiddleware, adminMiddleware, updateProduct)
-
-route.delete("/api/produto:id", authMiddleware, adminMiddleware, deleteProduct)
-
-
-
-
-
 
 route.post("/api/cart:produtoId", authMiddleware, addToCart)
 

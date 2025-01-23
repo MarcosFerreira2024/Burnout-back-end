@@ -43,7 +43,7 @@ model produtos {
   name       String        @unique
   price      String
   size       String[]
-  photo      String
+  photo      String[]
   colorName  String
   colorHex   String
   category   String[]
