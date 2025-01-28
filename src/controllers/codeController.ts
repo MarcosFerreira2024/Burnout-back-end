@@ -11,7 +11,10 @@ export const verifyCode: RequestHandler = async (req, res) => {
         if (data.success) {
             const finded = await findCodeModel(data.data)
 
-            if (finded instanceof Error) res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Codigo nao encontrado" })
+            if (finded instanceof Error) {
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Codigo nao encontrado" })
+                return
+            }
 
             const token = createJWT(finded as JWT)
 
@@ -26,10 +29,10 @@ export const verifyCode: RequestHandler = async (req, res) => {
         })
         return
     } catch (e) {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-            message: e
-
-        })
+        if (e instanceof Error) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: e.message })
+            return
+        }
         return
     }
 
