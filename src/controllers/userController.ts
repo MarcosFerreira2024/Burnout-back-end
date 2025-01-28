@@ -1,7 +1,7 @@
 import { RequestHandler } from "express"
-import { loginSchema, registerUserSchema } from "../schemas/userSchema"
+import { loginSchema, registerUserSchema, updateSchema } from "../schemas/userSchema"
 import HTTP_STATUS from "../consts/HttpStatus"
-import { CreateUserModel, deleteUserModel, findUserModel, getUserModel } from "../models/userModel"
+import { CreateUserModel, deleteUserModel, findUserModel, getAllUsersModel, getUserModel, updateUserModel } from "../models/userModel"
 import { sendVerificationCode } from "../services/sendVerificationCode"
 import { validatePasswordToCreateJWT, verifyJWT } from "../services/jwt"
 import { deleteCodeModel } from "../models/codeModel"
@@ -12,12 +12,17 @@ import { handleCode } from "../services/createCode"
 export const CreateUser: RequestHandler = async (req, res) => {
 
     // pegar os dados
+    if (req.body.role) {
+        res.status(HTTP_STATUS.FORBIDDEN).json({ msg: "ACESSO NEGADO" })
+        return
+    }
+
     const dados = registerUserSchema.safeParse(req.body)
 
     // verificar os dados
     if (dados.error) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
-            message: dados.error.issues[0].message
+            message: dados.error.flatten().fieldErrors
         })
         return
     }
@@ -43,8 +48,8 @@ export const CreateUser: RequestHandler = async (req, res) => {
             res.status(HTTP_STATUS.OK).json({
                 message: "Código Enviado para o Email"
             })
+            return
         }
-        return
 
 
     }
@@ -179,7 +184,30 @@ export const deleteUser: RequestHandler = async (req, res) => {
     }
 }
 
-
+export const deleteAnyUser: RequestHandler = async (req, res) => {
+    const id = req.params.id
+    try {
+        const deleted = await deleteUserModel(id)
+        if (deleted instanceof Error) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                message: deleted.message
+            })
+            return
+        }
+        res.status(HTTP_STATUS.OK).json({
+            message: deleted
+        })
+        return
+    } catch (e) {
+        if (e instanceof Error) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                message: e.message
+            })
+            return
+        }
+        return
+    }
+}
 
 
 export const getUser: RequestHandler = async (req, res) => {
@@ -200,6 +228,7 @@ export const getUser: RequestHandler = async (req, res) => {
         res.status(HTTP_STATUS.OK).json(
             user
         )
+        return
     }
     catch (e) {
         if (e instanceof Error) {
@@ -215,3 +244,64 @@ export const getUser: RequestHandler = async (req, res) => {
 
 }
 
+export const getAllUsers: RequestHandler = async (req, res) => {
+
+    try {
+        const users = await getAllUsersModel()
+
+        if (users instanceof Error) throw new Error(users.message)
+
+        res.status(HTTP_STATUS.OK).json(users)
+        return
+    } catch (e) {
+        if (e instanceof Error) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: e.message })
+            return
+        }
+        return
+    }
+}
+
+export const updateUser: RequestHandler = async (req, res) => {
+    const token = req.headers.authorization
+
+    if (token) {
+        try {
+            const { email, id } = verifyJWT(token) as JWT
+
+            const finded = await findUserModel(email)
+
+            if (finded instanceof Error) throw new Error(finded.message)
+
+            if (req.body.role && finded.role !== "ADMIN") {
+                res.status(HTTP_STATUS.FORBIDDEN).json({ msg: "ACESSO NEGADO" })
+
+                return
+            }
+
+
+            const validatedData = updateSchema.safeParse(req.body)
+
+            if (validatedData.error) {
+                res.status(HTTP_STATUS.BAD_REQUEST).json(validatedData.error.flatten().fieldErrors)
+                return
+            }
+            const updatedUser = await updateUserModel(id, validatedData.data)
+
+            if (updatedUser instanceof Error) throw new Error(updatedUser.message)
+
+            res.status(HTTP_STATUS.OK).json(updatedUser)
+            return
+
+        } catch (e) {
+            if (e instanceof Error) {
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ msg: e.message })
+                return
+            }
+
+            return
+        }
+    }
+
+
+}

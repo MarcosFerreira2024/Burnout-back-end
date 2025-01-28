@@ -78,6 +78,7 @@ export const findUserModel = async (email: string) => {
             select: {
                 id: true,
                 name: true,
+                role: true,
                 email: true,
                 photo: true,
                 password: true,
@@ -106,13 +107,7 @@ export const updateUserModel = async (id: string, data: Prisma.usersUpdateInput)
                 id
             },
             data,
-            select: {
-                id: true,
-                email: true,
-                password: true,
-                status: true,
-                code: true,
-            }
+
         })
         if (updated) {
             return updated
@@ -163,4 +158,15 @@ export const getUserModel = async (token: JWTPayloadToken) => {
     }
 
 
+}
+
+export const getAllUsersModel = async () => {
+    try {
+        const users = await prisma.users.findMany({
+        })
+        return users
+    } catch (e) {
+        if (e instanceof Error) return new Error(e.message)
+        return new Error("Erro interno")
+    }
 }

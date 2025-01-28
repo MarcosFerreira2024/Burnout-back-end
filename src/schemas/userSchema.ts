@@ -24,3 +24,19 @@ export const loginSchema = z.object({
 })
 
 
+export const updateSchema = z.object({
+    email: z.string().min(7, ErrorMessage.emailSizeError).email(ErrorMessage.emailSizeError),
+    password: z.string().min(8, ErrorMessage.passwordSizeError),
+    name: z.string().min(2, ErrorMessage.nameSizeError),
+    confirmPassword: z.string().min(8, ErrorMessage.confirmPasswordSizeError),
+    photo: z.string(),
+    favoritos: z.array(z.string()),
+    carrinho: z.array(z.string()),
+
+
+
+}).partial().refine((data) => !data.password || !data.confirmPassword || data.password === data.confirmPassword, {
+    message: ErrorMessage.passwordMatchError,
+    path: ["confirmPassword"]
+
+})

@@ -1,6 +1,6 @@
 import { Router } from "express"
-import { CreateUser, deleteUser, getUser, login } from "../controllers/userController"
-import { authMiddleware } from "../middlewares/authMiddleware"
+import { CreateUser, deleteUser, getAllUsers, getUser, login, updateUser } from "../controllers/userController"
+import { adminMiddleware, authMiddleware } from "../middlewares/Middleware"
 import { verifyCode } from "../controllers/codeController"
 import { createProduct, deleteProduct, getAllProducts, getOneProduct, updateProduct } from "../controllers/productController"
 
@@ -48,7 +48,7 @@ route.get("/api/routes", (req, res) => { // listar todas as rotas
 
 route.post("/api/sign", CreateUser)
 
-route.post("/api/code", verifyCode)
+route.get("/api/users", authMiddleware, adminMiddleware, getAllUsers)
 
 route.get("/api/user", authMiddleware, getUser)
 
@@ -56,28 +56,36 @@ route.post("/api/login", login)
 
 route.delete("/api/user", authMiddleware, deleteUser)
 
+route.delete("/api/user/:id", authMiddleware, adminMiddleware, deleteUser)
+
+route.put("/api/user", authMiddleware, updateUser)
+
+
+
+route.post("/api/code", verifyCode)
 
 
 
 
-route.post("/api/produto", authMiddleware, createProduct)
+
+route.post("/api/produto", authMiddleware, adminMiddleware, createProduct)
 
 route.get("/api/produtos", getAllProducts)
 
 route.get("/api/produto/:id", getOneProduct)
 
-route.delete("/api/produto/:id", authMiddleware, deleteProduct)
+route.delete("/api/produto/:id", authMiddleware, adminMiddleware, deleteProduct)
 
-route.put("/api/produto/:id", authMiddleware, updateProduct)
+route.put("/api/produto/:id", authMiddleware, adminMiddleware, updateProduct)
 
 
-//adminMiddleware, 
+
 /*
 
-route.post("/api/cart:produtoId", authMiddleware, addToCart)
+route.post("/api/user:userId/cart/:produtoId", authMiddleware, addToCart)
 
-route.delete("/api/cart:produtoId", authMiddleware, removeFromCart)
+route.delete("/api/user:userId/cart/:produtoId", authMiddleware, removeFromCart)
 
-route.put("/api/cart:produtoId", authMiddleware, updateFromCart)*/
+route.put("/api/user:userId/cart/:produtoId", authMiddleware, updateFromCart)*/
 
 export default route
