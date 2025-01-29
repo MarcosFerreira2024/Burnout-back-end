@@ -6,7 +6,7 @@ import { handleCode } from "../services/createCode"
 export const CreateUserModel = async (data: Prisma.usersCreateInput) => {
     //verificar se o usuário existe
     try {
-        const user = await findUserModel(data.email)
+        const user = await findUserModel("email", data.email)
 
         if (user instanceof Error && user.message === "Usuário não foi encontrado") {
             const salt = 10
@@ -17,19 +17,29 @@ export const CreateUserModel = async (data: Prisma.usersCreateInput) => {
                 data: {
                     ...data,
                     password: hashedPassword,
+                    carrinho: {
+                        create: {
+                            cartItem: {
+                                create: []
+                            }
+                        }
+                    }
 
 
                 },
 
-                select: {
-                    id: true,
-                    email: true,
-                    password: true,
-                    status: true,
+                include: {
+                    carrinho: {
+                        include: {
+                            cartItem: true
+                        }
+                    },
+                    fav: true,
+                    avaliacoes: true,
+                    comments: true,
                     code: true,
-                    photo: true
-
                 }
+
 
             })
 
@@ -69,20 +79,23 @@ export const CreateUserModel = async (data: Prisma.usersCreateInput) => {
 
 }
 //função para encontrar usuário
-export const findUserModel = async (email: string) => {
+export const findUserModel = async (identificador: "id" | "email", value: string) => {
     try {
+        const where = identificador === "id" ? { id: value } : identificador === "email" ? { email: value } : undefined
+        if (!where) throw new Error("Chave Inválida para busca")
         const user = await prisma.users.findUnique({
-            where: {
-                email
-            },
-            select: {
-                id: true,
-                name: true,
-                role: true,
-                email: true,
-                photo: true,
-                password: true,
-                status: true,
+            where,
+
+
+            include: {
+                carrinho: {
+                    include: {
+                        cartItem: true
+                    }
+                },
+                fav: true,
+                avaliacoes: true,
+                comments: true,
                 code: true,
             }
 
@@ -107,6 +120,18 @@ export const updateUserModel = async (id: string, data: Prisma.usersUpdateInput)
                 id
             },
             data,
+
+            include: {
+                carrinho: {
+                    include: {
+                        cartItem: true
+                    }
+                },
+                fav: true,
+                avaliacoes: true,
+                comments: true,
+                code: true,
+            }
 
         })
         if (updated) {
@@ -147,7 +172,7 @@ export const deleteUserModel = async (id: string) => {
 
 export const getUserModel = async (token: JWTPayloadToken) => {
     try {
-        const user = await findUserModel(token.email)
+        const user = await findUserModel("email", token.email)
         if (user instanceof Error) throw new Error(user.message)
 
         return user
@@ -163,6 +188,18 @@ export const getUserModel = async (token: JWTPayloadToken) => {
 export const getAllUsersModel = async () => {
     try {
         const users = await prisma.users.findMany({
+
+            include: {
+                carrinho: {
+                    include: {
+                        cartItem: true
+                    }
+                },
+                fav: true,
+                avaliacoes: true,
+                comments: true,
+                code: true,
+            }
         })
         return users
     } catch (e) {
