@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -25,8 +22,30 @@ model users {
   comments   comentarios[]
   code       code?
   avaliacoes avaliacoes[]
+  carrinho   cart?
 
   @@map("Users")
+}
+
+model cart {
+  id       String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String     @unique @db.ObjectId
+  user     users      @relation(fields: [userId], references: [id])
+  cartItem cartItem[]
+
+  @@map("Cart")
+}
+
+model cartItem {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  cartId    String @db.ObjectId
+  productId String @db.ObjectId
+  quantity  Int    @default(1)
+
+  cart    cart     @relation(fields: [cartId], references: [id])
+  product produtos @relation(fields: [productId], references: [id])
+
+  @@map("CartItem")
 }
 
 model favoritos {
@@ -55,6 +74,7 @@ model produtos {
   fav        favoritos[]
   comments   comentarios[]
   avaliacoes avaliacoes[]
+  cartItem   cartItem[]
 
   @@map("Produtos")
 }
@@ -65,6 +85,9 @@ model avaliacoes {
   productId String   @db.ObjectId
   user      users    @relation(fields: [userId], references: [id])
   product   produtos @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId])
+  @@map("Avaliacoes")
 }
 
 model comentarios {
@@ -80,6 +103,7 @@ model comentarios {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([userId, productId])
   @@map("Comentarios")
 }
 
