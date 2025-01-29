@@ -77,7 +77,7 @@ export const login: RequestHandler = async (req, res) => {
 
     if (validation.success) {
         try {
-            const user = await findUserModel(validation.data.email)
+            const user = await findUserModel("email", validation.data.email)
             if (user instanceof Error) {
                 res.status(HTTP_STATUS.BAD_REQUEST).json({ message: user.message })
                 return
@@ -269,7 +269,7 @@ export const updateUser: RequestHandler = async (req, res) => {
         try {
             const { email, id } = verifyJWT(token) as JWT
 
-            const finded = await findUserModel(email)
+            const finded = await findUserModel("email", email)
 
             if (finded instanceof Error) throw new Error(finded.message)
 

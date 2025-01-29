@@ -61,7 +61,7 @@ export const findCodeModel = async (code: string) => {
             }
         })
         if (codigo) {
-            const findedUser = await findUserModel(codigo.user.email)
+            const findedUser = await findUserModel("email", codigo.user.email)
 
 
             if (findedUser instanceof Error) throw new Error(findedUser.message)
