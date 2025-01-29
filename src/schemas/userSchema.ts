@@ -30,8 +30,7 @@ export const updateSchema = z.object({
     name: z.string().min(2, ErrorMessage.nameSizeError),
     confirmPassword: z.string().min(8, ErrorMessage.confirmPasswordSizeError),
     photo: z.string(),
-    favoritos: z.array(z.string()),
-    carrinho: z.array(z.string()),
+
 
 
 

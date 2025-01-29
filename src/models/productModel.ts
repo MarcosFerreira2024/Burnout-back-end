@@ -60,7 +60,6 @@ export const findProduct = async (identificador: "id" | "name", value: string) =
 
 export const getAllProductsModel = async (name?: string) => {
 
-    console.log(name)
     try {
         if (name) {
             if (name === "Produtos") {

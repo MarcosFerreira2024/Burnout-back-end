@@ -3,6 +3,7 @@ import { CreateUser, deleteUser, getAllUsers, getUser, login, updateUser } from 
 import { adminMiddleware, authMiddleware } from "../middlewares/Middleware"
 import { verifyCode } from "../controllers/codeController"
 import { createProduct, deleteProduct, getAllProducts, getOneProduct, updateProduct } from "../controllers/productController"
+import { addToCart } from "../controllers/CartController"
 
 
 const route = Router()
@@ -80,12 +81,12 @@ route.put("/api/produto/:id", authMiddleware, adminMiddleware, updateProduct)
 
 
 
-/*
 
-route.post("/api/user:userId/cart/:produtoId", authMiddleware, addToCart)
 
-route.delete("/api/user:userId/cart/:produtoId", authMiddleware, removeFromCart)
+route.post("/api/user/:userId/cart/:produtoId", authMiddleware, addToCart)
 
-route.put("/api/user:userId/cart/:produtoId", authMiddleware, updateFromCart)*/
+//route.delete("/api/user/:userId/cart/:produtoId", authMiddleware, removeFromCart)
+
+//route.put("/api/user/:userId/cart/:produtoId", authMiddleware, updateFromCart)
 
 export default route
