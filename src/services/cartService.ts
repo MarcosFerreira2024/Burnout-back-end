@@ -19,11 +19,18 @@ export const addOrRemove = async (finded: cartItem, operation: "add" | "remove")
 
             if (findedCartItemQuantity) {
                 if (findedCartItemQuantity.quantity === 1) {
-                    prisma.cartItem.delete({ where: { id: finded.id } })
+                    await prisma.cartItem.delete({
+                        where: {
+                            id: finded.id
+
+                        }
+
+                    })
 
                     return "Produto Deletado do Carrinho"
 
                 }
+
             }
         }
         const updated = await prisma.cartItem.update({

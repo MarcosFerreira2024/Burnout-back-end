@@ -1,8 +1,8 @@
 import { RequestHandler } from "express";
 import HTTP_STATUS from "../consts/HttpStatus";
-import { addOrIncrementProductInCartModel, decrementOrRemoveProductFromCartModel, removeAllFromOneProductModel } from "../models/CartModel";
 import { cartOperations } from "../services/cartService";
 import { AddedOrRemovedProductFromCart, deletedProductFromCart } from "../types/cartTypes";
+import { addOrIncrementProductInCartModel, decrementOrRemoveProductFromCartModel, getCartItemsModel, removeAllFromOneProductModel } from "../models/cartModel";
 
 export const addOrIncrementProductInCart: RequestHandler = async (req, res) => {
 
@@ -96,3 +96,20 @@ export const decrementOrRemoveProductFromCart: RequestHandler = async (req, res)
 
 
 
+export const getCartItems: RequestHandler = async (req, res) => {
+    const user = req.params.userId
+    try {
+        if (!user) throw new Error("Dados invalidos")
+
+        const cartItems = await getCartItemsModel(user)
+
+
+        if (cartItems instanceof Error) throw new Error(cartItems.message)
+
+        res.status(HTTP_STATUS.OK).json(cartItems)
+        return
+
+    } catch (e) {
+        if (e instanceof Error) res.status(HTTP_STATUS.BAD_REQUEST).json({ message: e.message })
+    }
+}

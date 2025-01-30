@@ -132,6 +132,7 @@ export const decrementOrRemoveProductFromCartModel = async (user: string, produc
                     return added
 
                 }
+                throw new Error("Produto Não Foi Encontrado")
             }
         }
 
@@ -146,3 +147,35 @@ export const decrementOrRemoveProductFromCartModel = async (user: string, produc
 
 
 }
+
+export const getCartItemsModel = async (user: string) => {
+
+    try {
+        const items = await prisma.cart.findUnique({
+            where: {
+                userId: user
+            },
+            select: {
+                cartItem: {
+                    select: {
+                        product: true,
+                        quantity: true
+                    }
+                }
+            }
+        })
+        if (items) return items.cartItem
+
+        throw new Error("Carrinho Vazio")
+    }
+    catch (e) {
+        if (e instanceof Error) return new Error(e.message)
+
+
+    }
+
+
+
+
+}
+
