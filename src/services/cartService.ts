@@ -1,4 +1,4 @@
-import { cartItem, Prisma } from "@prisma/client"
+import { cartItem } from "@prisma/client"
 import prisma from "../lib/prismaClient"
 import { findUserModel } from "../models/userModel"
 import { findProduct } from "../models/productModel"

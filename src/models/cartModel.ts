@@ -1,6 +1,7 @@
 import prisma from "../lib/prismaClient"
-import { addOrRemove, verifyDataFromCart } from "../services/cartService";
-import { AddedOrRemovedProductFromCart, deletedProductFromCart } from "../types/cartTypes";
+import { addOrRemove, verifyDataFromCart } from "../services/cartService"
+import { AddedOrRemovedProductFromCart, deletedProductFromCart } from "../types/cartTypes"
+
 
 export const addOrIncrementProductInCartModel = async (user: string, product: string): Promise<Error | AddedOrRemovedProductFromCart> => {
     try {
@@ -15,7 +16,6 @@ export const addOrIncrementProductInCartModel = async (user: string, product: st
                 if (finded) {
 
                     const added = await addOrRemove(finded, "add") as AddedOrRemovedProductFromCart
-
 
                     return added
 
@@ -113,40 +113,7 @@ export const removeAllFromOneProductModel = async (user: string, product: string
 
 }
 
-export const decrementOrRemoveProductFromCartModel = async (user: string, product: string): Promise<Error | AddedOrRemovedProductFromCart> => {
-    try {
-        const data = await verifyDataFromCart(user, product)
-        if (data instanceof Error) throw new Error(data.message)
 
-
-        if (data) {
-            const { findedUser, findedProduct } = data
-
-            if (findedUser.carrinho) {
-                const finded = findedUser.carrinho.cartItem.find((item) => item.productId === findedProduct.id)
-                if (finded) {
-
-                    const added = await addOrRemove(finded, "remove") as AddedOrRemovedProductFromCart
-
-
-                    return added
-
-                }
-                throw new Error("Produto Não Foi Encontrado")
-            }
-        }
-
-        throw new Error("Produto Não Foi Encontrado")
-
-    }
-    catch (e) {
-        if (e instanceof Error) return new Error(e.message)
-
-        return new Error("Erro Desconhecido")
-    }
-
-
-}
 
 export const getCartItemsModel = async (user: string) => {
 
@@ -164,7 +131,10 @@ export const getCartItemsModel = async (user: string) => {
                 }
             }
         })
-        if (items) return items.cartItem
+        if (items) {
+            if (items.cartItem.length > 0) return items.cartItem
+
+        }
 
         throw new Error("Carrinho Vazio")
     }
@@ -177,5 +147,52 @@ export const getCartItemsModel = async (user: string) => {
 
 
 
+}
+
+export const updateCartModel = async (user: string, cart: any) => {
+
+
+    try {
+        const result = await prisma.cart.update({
+            where: {
+                userId: user
+
+            },
+            data: {
+                cartItem: {
+                    deleteMany: {},
+                    createMany: {
+                        data: cart.map((item: any) => ({
+                            quantity: item.quantity,
+                            productId: item.product.id,
+                        }))
+
+                    }
+                }
+
+
+            },
+            select: {
+                cartItem: {
+                    select: {
+                        quantity: true,
+                        product: true
+                    }
+                }
+            }
+        })
+        if (result) { // verificando se houve algum erro na requisição do front e removendo o carrinho caso haja um produto com quantidade 0
+            const filteredResult = result.cartItem.filter((item) => item.quantity !== 0)
+            if (filteredResult.length === 0) throw new Error("Carrinho Vazio")
+
+            return filteredResult
+        }
+
+
+        throw new Error("Carrinho Vazio")
+    } catch (e) {
+        if (e instanceof Error) return new Error(e.message)
+
+    }
 }
 
