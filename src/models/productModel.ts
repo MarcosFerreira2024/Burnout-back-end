@@ -68,10 +68,9 @@ export const getAllProductsModel = async (name?: string) => {
             }
             const produtos = await prisma.produtos.findMany({
                 where: {
-                    category: {
-                        has: name
-
-                    },
+                    name: {
+                        contains: name
+                    }
 
 
                 }

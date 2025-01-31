@@ -58,7 +58,7 @@ export const adminMiddleware: RequestHandler = async (req, res, next) => {
         }
 
 
-        const finded = await findUserModel(token.email)
+        const finded = await findUserModel("email", token.email)
 
         if (finded instanceof Error) throw new Error(finded.message)
 
