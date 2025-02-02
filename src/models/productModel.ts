@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../lib/prismaClient";
+import { findUserModel, getAllUsersModel } from "./userModel";
 
 export const createProductModel = async (data: Prisma.produtosCreateInput) => {
     try {
@@ -68,9 +69,10 @@ export const getAllProductsModel = async (name?: string) => {
             }
             const produtos = await prisma.produtos.findMany({
                 where: {
-                    name: {
-                        contains: name
-                    }
+                    OR: [
+                        { name: { contains: name } },
+                        { name: { startsWith: name } }
+                    ]
 
 
                 }
@@ -91,7 +93,22 @@ export const getAllProductsModel = async (name?: string) => {
 export const deleteProductModel = async (id: string) => {
     try {
         const produto = await findProduct("id", id)
+        const users = await getAllUsersModel()
+        if (users instanceof Error) throw new Error(users.message)
         if (produto instanceof Error) throw new Error(produto.message)
+        for (const user of users) {
+            if (user.carrinho?.cartItem.find(item => item.productId === produto.id)) {
+                await prisma.cartItem.deleteMany({
+                    where: {
+                        productId: produto.id,
+                        cartId: user.carrinho.id
+                    }
+                });
+            }
+        }
+
+
+
         const deleted = await prisma.produtos.delete({
             where: {
                 id
