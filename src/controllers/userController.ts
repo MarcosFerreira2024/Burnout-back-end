@@ -22,7 +22,7 @@ export const CreateUser: RequestHandler = async (req, res) => {
     // verificar os dados
     if (dados.error) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
-            message: dados.error.flatten().fieldErrors
+            message: dados.error?.issues[0].message
         })
         return
     }
