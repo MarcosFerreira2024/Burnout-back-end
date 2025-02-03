@@ -125,10 +125,11 @@ const getCartItemsModel = (user) => __awaiter(void 0, void 0, void 0, function* 
             }
         });
         if (items) {
-            if (items.cartItem.length > 0)
+            if (items.cartItem.length > 0) {
                 return items.cartItem;
+            }
         }
-        throw new Error("Carrinho Vazio");
+        throw new Error("Carrinho Vazio ");
     }
     catch (e) {
         if (e instanceof Error)

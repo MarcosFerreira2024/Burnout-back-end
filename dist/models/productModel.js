@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getOneProductModel = exports.updateProductModel = exports.deleteProductModel = exports.getAllProductsModel = exports.findProduct = exports.createProductModel = void 0;
 const prismaClient_1 = __importDefault(require("../lib/prismaClient"));
+const userModel_1 = require("./userModel");
 const createProductModel = (data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (data) {
@@ -69,9 +70,10 @@ const getAllProductsModel = (name) => __awaiter(void 0, void 0, void 0, function
             }
             const produtos = yield prismaClient_1.default.produtos.findMany({
                 where: {
-                    name: {
-                        contains: name
-                    }
+                    OR: [
+                        { name: { contains: name } },
+                        { name: { startsWith: name } }
+                    ]
                 }
             });
             if (produtos)
@@ -88,10 +90,24 @@ const getAllProductsModel = (name) => __awaiter(void 0, void 0, void 0, function
 });
 exports.getAllProductsModel = getAllProductsModel;
 const deleteProductModel = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const produto = yield (0, exports.findProduct)("id", id);
+        const users = yield (0, userModel_1.getAllUsersModel)();
+        if (users instanceof Error)
+            throw new Error(users.message);
         if (produto instanceof Error)
             throw new Error(produto.message);
+        for (const user of users) {
+            if ((_a = user.carrinho) === null || _a === void 0 ? void 0 : _a.cartItem.find(item => item.productId === produto.id)) {
+                yield prismaClient_1.default.cartItem.deleteMany({
+                    where: {
+                        productId: produto.id,
+                        cartId: user.carrinho.id
+                    }
+                });
+            }
+        }
         const deleted = yield prismaClient_1.default.produtos.delete({
             where: {
                 id

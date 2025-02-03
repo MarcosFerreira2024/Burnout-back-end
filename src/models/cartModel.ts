@@ -132,11 +132,13 @@ export const getCartItemsModel = async (user: string) => {
             }
         })
         if (items) {
-            if (items.cartItem.length > 0) return items.cartItem
+            if (items.cartItem.length > 0) {
+                return items.cartItem
+            }
 
         }
 
-        throw new Error("Carrinho Vazio")
+        throw new Error("Carrinho Vazio ")
     }
     catch (e) {
         if (e instanceof Error) return new Error(e.message)
