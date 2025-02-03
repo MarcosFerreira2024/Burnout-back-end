@@ -32,6 +32,7 @@ const jwt_1 = require("../services/jwt");
 const codeModel_1 = require("../models/codeModel");
 const createCode_1 = require("../services/createCode");
 const CreateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     // pegar os dados
     if (req.body.role) {
         res.status(HttpStatus_1.default.FORBIDDEN).json({ msg: "ACESSO NEGADO" });
@@ -41,13 +42,13 @@ const CreateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     // verificar os dados
     if (dados.error) {
         res.status(HttpStatus_1.default.BAD_REQUEST).json({
-            message: dados.error.flatten().fieldErrors
+            message: (_a = dados.error) === null || _a === void 0 ? void 0 : _a.issues[0].message
         });
         return;
     }
     // mandar os dados pro model
     try {
-        const _a = dados.data, { confirmPassword } = _a, data = __rest(_a, ["confirmPassword"]);
+        const _b = dados.data, { confirmPassword } = _b, data = __rest(_b, ["confirmPassword"]);
         const user = yield (0, userModel_1.CreateUserModel)(data);
         if (user instanceof Error) {
             res.status(HttpStatus_1.default.BAD_REQUEST).json({
