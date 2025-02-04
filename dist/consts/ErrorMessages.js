@@ -14,7 +14,7 @@ const ErrorMessage = {
     productPriceSizeError: "O preço do produto  deve conter 7 caracteres totais no formato R$00,00 .",
     productSizeError: "O tamanho do produto  deve conter pelo menos 1 tamanho com no minimo 1 digito",
     productColorNameSizeError: "O nome da cor do produto deve conter pelo menos 3 caracteres",
-    productColorHexMaxSizeError: "O código da cor do produto deve conter no maximo 7 caracteres.",
+    productColorHexMaxSizeError: "O código da cor do produto deve conter no maximo 7 caracteres no formato #RRGGBB ou #RGB.",
     productColorHexMinSizeError: "O código da cor do produto deve conter no minimo 4 caracteres.",
     productCategoryError: "A categoria do produto deve ser um array de strings com pelo menos uma categoria."
 };

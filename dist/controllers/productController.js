@@ -17,6 +17,7 @@ const HttpStatus_1 = __importDefault(require("../consts/HttpStatus"));
 const productSchema_1 = require("../schemas/productSchema");
 const productModel_1 = require("../models/productModel");
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const validatedData = productSchema_1.productSchema.safeParse(req.body);
     try {
         if (validatedData.success) {
@@ -26,7 +27,7 @@ const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             res.status(HttpStatus_1.default.OK).json(created);
             return;
         }
-        res.status(HttpStatus_1.default.BAD_REQUEST).json(validatedData.error.flatten().fieldErrors);
+        res.status(HttpStatus_1.default.BAD_REQUEST).json({ message: (_a = validatedData.error) === null || _a === void 0 ? void 0 : _a.issues[0].message });
         return;
     }
     catch (e) {
