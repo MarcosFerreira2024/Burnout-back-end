@@ -14,7 +14,7 @@ export const createProduct: RequestHandler = async (req, res) => {
             res.status(HTTP_STATUS.OK).json(created)
             return
         }
-        res.status(HTTP_STATUS.BAD_REQUEST).json(validatedData.error.flatten().fieldErrors)
+        res.status(HTTP_STATUS.BAD_REQUEST).json({ message: validatedData.error?.issues[0].message })
         return
 
     }

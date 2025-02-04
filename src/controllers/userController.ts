@@ -5,7 +5,6 @@ import { CreateUserModel, deleteUserModel, findUserModel, getAllUsersModel, getU
 import { sendVerificationCode } from "../services/sendVerificationCode"
 import { validatePasswordToCreateJWT, verifyJWT } from "../services/jwt"
 import { deleteCodeModel } from "../models/codeModel"
-import { Jwt, JwtPayload } from "jsonwebtoken"
 import { handleCode } from "../services/createCode"
 
 

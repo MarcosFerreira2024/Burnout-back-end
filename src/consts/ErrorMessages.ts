@@ -25,7 +25,7 @@ const ErrorMessage = {
 
     productColorNameSizeError: "O nome da cor do produto deve conter pelo menos 3 caracteres",
 
-    productColorHexMaxSizeError: "O código da cor do produto deve conter no maximo 7 caracteres.",
+    productColorHexMaxSizeError: "O código da cor do produto deve conter no maximo 7 caracteres no formato #RRGGBB ou #RGB.",
 
     productColorHexMinSizeError: "O código da cor do produto deve conter no minimo 4 caracteres.",
 
