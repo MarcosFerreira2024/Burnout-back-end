@@ -59,35 +59,49 @@ export const findProduct = async (identificador: "id" | "name", value: string) =
     }
 }
 
-export const getAllProductsModel = async (name?: string) => {
+export const getAllProductsModel = async (name?: string, page?: string) => {
+    if (page === undefined) page = "1";
+
+    const take = 20
 
     try {
-        if (name) {
-            if (name === "Produtos") {
-                const produtos = await prisma.produtos.findMany({})
-                if (produtos) return produtos
-            }
-            const produtos = await prisma.produtos.findMany({
-                where: {
-                    OR: [
-                        { name: { contains: name } },
-                        { name: { startsWith: name } }
-                    ]
+        let whereCondition = {};
 
-
-                }
-            })
-            if (produtos) return produtos
-            throw new Error("Nao foi possivel encontrar os produtos")
+        if (name && name !== "Produtos") {
+            whereCondition = {
+                OR: [
+                    { name: { contains: name } },
+                    { category: { has: name } }
+                ]
+            };
         }
-        throw new Error("Nao foi possivel encontrar os produtos")
 
+        const totalProducts = await prisma.produtos.count({
+            where: whereCondition
+        });
+
+        // Buscar os produtos paginados
+        const produtos = await prisma.produtos.findMany({
+            where: whereCondition,
+            take: take,
+            skip: (parseInt(page) - 1) * take
+        });
+
+        if (produtos) {
+            return {
+                produtos,
+                totalProducts,
+                totalPages: Math.ceil(totalProducts / take)
+            };
+        }
+
+        throw new Error("Não foi possível encontrar os produtos");
 
     } catch (e) {
-        if (e instanceof Error) return new Error(e.message)
-        return new Error("Erro Desconhecido")
+        if (e instanceof Error) return new Error(e.message);
+        return new Error("Erro Desconhecido");
     }
-}
+};
 
 
 export const deleteProductModel = async (id: string) => {

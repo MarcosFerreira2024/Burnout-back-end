@@ -41,7 +41,7 @@ const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.createProduct = createProduct;
 const getAllProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const products = yield (0, productModel_1.getAllProductsModel)(req.query.name);
+        const products = yield (0, productModel_1.getAllProductsModel)(req.query.name, req.query.page);
         if (products instanceof Error)
             throw new Error(products.message);
         res.status(HttpStatus_1.default.OK).json(products);
@@ -75,13 +75,13 @@ const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.deleteProduct = deleteProduct;
 const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
-    const data = productSchema_1.productSchema.partial().safeParse(req.query);
+    const data = productSchema_1.productSchema.partial().safeParse(req.body);
     try {
         if (data.error) {
             res.status(HttpStatus_1.default.BAD_REQUEST).json(data.error.flatten().fieldErrors);
             return;
         }
-        if (Object.keys(req.query).length === 0 || id.length === 0)
+        if (req.body.length === 0 || id.length === 0)
             throw new Error("Dados para atualização não foram encontrados");
         const updated = yield (0, productModel_1.updateProductModel)(id, data.data);
         if (updated instanceof Error)

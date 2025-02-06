@@ -35,7 +35,7 @@ export const getAllProducts: RequestHandler = async (req, res) => {
 
 
     try {
-        const products = await getAllProductsModel(req.query.name as string)
+        const products = await getAllProductsModel(req.query.name as string, req.query.page as string,)
         if (products instanceof Error) throw new Error(products.message)
 
         res.status(HTTP_STATUS.OK).json(products)
@@ -70,14 +70,14 @@ export const updateProduct: RequestHandler = async (req, res) => {
 
     const id = req.params.id
 
-    const data = productSchema.partial().safeParse(req.query)
+    const data = productSchema.partial().safeParse(req.body)
 
     try {
         if (data.error) {
             res.status(HTTP_STATUS.BAD_REQUEST).json(data.error.flatten().fieldErrors)
             return
         }
-        if (Object.keys(req.query).length === 0 || id.length === 0) throw new Error("Dados para atualização não foram encontrados")
+        if (req.body.length === 0 || id.length === 0) throw new Error("Dados para atualização não foram encontrados")
 
         const updated = await updateProductModel(id, data.data)
         if (updated instanceof Error) throw new Error(updated.message)

@@ -60,27 +60,37 @@ const findProduct = (identificador, value) => __awaiter(void 0, void 0, void 0, 
     }
 });
 exports.findProduct = findProduct;
-const getAllProductsModel = (name) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllProductsModel = (name, page) => __awaiter(void 0, void 0, void 0, function* () {
+    if (page === undefined)
+        page = "1";
+    const take = 20;
     try {
-        if (name) {
-            if (name === "Produtos") {
-                const produtos = yield prismaClient_1.default.produtos.findMany({});
-                if (produtos)
-                    return produtos;
-            }
-            const produtos = yield prismaClient_1.default.produtos.findMany({
-                where: {
-                    OR: [
-                        { name: { contains: name } },
-                        { name: { startsWith: name } }
-                    ]
-                }
-            });
-            if (produtos)
-                return produtos;
-            throw new Error("Nao foi possivel encontrar os produtos");
+        let whereCondition = {};
+        if (name && name !== "Produtos") {
+            whereCondition = {
+                OR: [
+                    { name: { contains: name } },
+                    { category: { has: name } }
+                ]
+            };
         }
-        throw new Error("Nao foi possivel encontrar os produtos");
+        const totalProducts = yield prismaClient_1.default.produtos.count({
+            where: whereCondition
+        });
+        // Buscar os produtos paginados
+        const produtos = yield prismaClient_1.default.produtos.findMany({
+            where: whereCondition,
+            take: take,
+            skip: (parseInt(page) - 1) * take
+        });
+        if (produtos) {
+            return {
+                produtos,
+                totalProducts,
+                totalPages: Math.ceil(totalProducts / take)
+            };
+        }
+        throw new Error("Não foi possível encontrar os produtos");
     }
     catch (e) {
         if (e instanceof Error)
