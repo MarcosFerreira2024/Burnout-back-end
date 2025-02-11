@@ -53,15 +53,7 @@ export const CreateUserModel = async (data: Prisma.usersCreateInput) => {
 
         }
 
-        if (user instanceof Error) throw new Error(user.message)
-
-        if (user.status === true) throw new Error("O usuario já existe")
-
-        const newCode = await handleCode(user)
-
-        if (newCode instanceof Error) throw new Error(newCode.message)
-
-        return newCode
+        throw new Error("Usuário ja existe")
 
 
 

@@ -51,14 +51,7 @@ const CreateUserModel = (data) => __awaiter(void 0, void 0, void 0, function* ()
                 throw new Error(code.message);
             return code;
         }
-        if (user instanceof Error)
-            throw new Error(user.message);
-        if (user.status === true)
-            throw new Error("O usuario já existe");
-        const newCode = yield (0, createCode_1.handleCode)(user);
-        if (newCode instanceof Error)
-            throw new Error(newCode.message);
-        return newCode;
+        throw new Error("Usuário ja existe");
     }
     catch (e) {
         if (e instanceof Error) {
