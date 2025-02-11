@@ -6,6 +6,7 @@
   <a href="#requisitosFuncionais">Requisitos Funcionais</a>
   <a href="#requisitosNaoFuncionais">Requisitos Não Funcionais</a>
   <a href="#prototipo">Protótipo</a>
+  <a href="#rotas">Rotas </a>
 </div>
 
 
@@ -126,12 +127,12 @@
   <p>Descrição: O sistema deve permitir a diferenciação entre usuários comuns e administradores, com permissões distintas. Administradores terão acesso a funcionalidades restritas, como gerenciamento de produtos, usuários e pedidos.</p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>O sistema garante que administradores tenham acesso ao painel de administração.</li>
-    <li>Usuários padrão não têm acesso a funcionalidades exclusivas de administradores.</li>
+    <li>O sistema garante que administradores tenham acesso ao painel de administração. ✅</li>
+    <li>Usuários padrão não têm acesso a funcionalidades exclusivas de administradores. ✅</li>
   </ul> 
   <p>Prioridade: <strong>Alta</strong></p>
   
-  <p>Concluido: <strong>false</strong></p>
+  <p>Concluido: <strong>true</strong></p>
 
 ##
 </div>
@@ -141,11 +142,11 @@
   <p>Descrição: O sistema deve permitir que administradores cadastrem novos produtos, fornecendo informações como nome, descrição, preço, categoria, imagens, e quantidade em estoque.</p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>O produto é salvo corretamente no banco de dados após o cadastro.</li>
-    <li>O sistema valida campos obrigatórios, como nome, preço e descrição.</li>
+    <li>O produto é salvo corretamente no banco de dados após o cadastro. ✅</li>
+    <li>O sistema valida campos obrigatórios, como nome, preço e descrição. ✅</li>
   </ul> 
   <p>Prioridade: <strong>Alta</strong></p>
-  <p>Concluido: <strong>false</strong></p>
+  <p>Concluido: <strong>true</strong></p>
   ##
 </div>
 
@@ -154,11 +155,11 @@
   <p>Descrição: O sistema deve permitir que os usuários busquem produtos utilizando filtros avançados como categoria, preço, cor, tamanho, etc. A busca deve ser rápida e eficiente, retornando resultados relevantes.</p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>O sistema retorna resultados relevantes de acordo com os filtros aplicados.</li>
-    <li>A busca deve ser responsiva e rápida.</li>
+    <li>O sistema retorna resultados relevantes de acordo com os filtros aplicados. ✅</li>
+    <li>A busca deve ser responsiva e rápida. ✅</li>
   </ul>
   <p>Prioridade: <strong>Alta</strong></p>
-  <p>Concluido: <strong>false</strong></p>
+  <p>Concluido: <strong>true</strong></p>
   ##
 </div>
 
@@ -180,7 +181,7 @@
   <p>Descrição: O sistema deve permitir que os usuários adicionem produtos ao carrinho e finalizem a compra. O processo de compra incluirá a escolha do endereço, método de pagamento e a confirmação do pedido.</p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>O usuário pode finalizar a compra com sucesso após preencher os detalhes necessários.</li>
+    <li>O usuário pode finalizar a compra com sucesso após preencher os detalhes necessários .</li>
     <li>O sistema processa o pagamento e confirma o pedido.</li>
   </ul>
   <p>Prioridade: <strong>Alta</strong></p>
@@ -193,11 +194,11 @@
   <p>Descrição: O sistema deve possuir um carrinho de compras onde o usuário pode adicionar, remover ou editar a quantidade dos itens selecionados. O carrinho deve ser persistente, ou seja, o conteúdo deve ser mantido mesmo que o usuário saia da página e volte depois.</p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>O carrinho salva as informações dos produtos selecionados e as guarda no localStorage.</li>
-    <li>O usuário pode editar o carrinho a qualquer momento, removendo ou adicionando itens.</li>
+    <li>O carrinho salva as informações dos produtos selecionados e as guarda no Banco de Dados. ✅</li>
+    <li>O usuário pode editar o carrinho a qualquer momento, removendo ou adicionando itens. ✅</li>
   </ul>
   <p>Prioridade: <strong>Alta</strong></p>
-  <p>Concluido: <strong>false</strong></p>
+  <p>Concluido: <strong>true</strong></p>
   ##
 </div>
 
@@ -206,11 +207,11 @@
   <p>Descrição: O sistema deve calcular automaticamente o total do carrinho, somando os preços dos produtos selecionados. O cálculo deve ser feito em tempo real, considerando eventuais descontos ou promoções aplicadas.</p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>O valor total do carrinho é calculado corretamente.</li>
-    <li>O cálculo deve ser atualizado automaticamente ao adicionar ou remover produtos.</li>
+    <li>O valor total do carrinho é calculado corretamente. ✅</li>
+    <li>O cálculo deve ser atualizado automaticamente ao adicionar ou remover produtos. ✅</li>
   </ul> 
   <p>Prioridade: <strong>Alta</strong></p>
-  <p>Concluido: <strong>false</strong></p>
+  <p>Concluido: <strong>true</strong></p>
   ##
 </div>
 
@@ -246,7 +247,7 @@
   <p>Descrição: O sistema deve possibilitar que usuarios acompanhem produtos comprados, desde o status da compra até a localização do produto.</p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>O usuario consegue acessar o status de sua compra</li>
+    <li>O usuario consegue acessar o status de sua compra </li>
     <li>O usuario consegue ver onde esta seu produto</li>
   </ul>
   <p>Prioridade: <strong>Baixa</strong></p>
@@ -289,11 +290,11 @@
   <p>Descrição: O sistema não deve expor informações pessoais de usuarios para outros usuarios </p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>O sistema não expõe dados sensiveis de usuarios para outros usuarios como cartão de credito,email, senha e endereço</li>
-    <li>O sistema criptografa os dados antes de enviar requisições ou salvar no banco de dados</li>
+    <li>O sistema não expõe dados sensiveis de usuarios para outros usuarios como cartão de credito,email, senha e endereço ✅</li>
+    <li>O sistema criptografa os dados antes de enviar requisições ou salvar no banco de dados ✅</li>
   </ul>
   <p>Prioridade: <strong>Alta</strong></p>
-  <p>Concluido: <strong>false</strong></p>
+  <p>Concluido: <strong>true</strong></p>
 ## 
 </div>
 <div>
@@ -315,7 +316,7 @@
   <p>Descrição: O sistema deve armazenar os dados de pagamento de forma segura </p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>Os dados salvos são criptografados</li>
+    <li>Os dados salvos são criptografados </li>
     <li>Os dados do usuário são salvos caso o usuário permita</li>
   </ul>
   <p>Prioridade: <strong>Alta</strong></p>
@@ -345,20 +346,20 @@
   <p>Descrição: O sistema deve ser capaz de lidar com uma alta carga de acessos simultâneos .</p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>O sistema deve ser capaz de suportar usuários simultâneos .</li>
+    <li>O sistema deve ser capaz de suportar usuários simultâneos ✅.</li>
   </ul>
   <p>Prioridade: <strong>Média</strong></p>
-  <p>Concluido: <strong>false</strong></p>
+  <p>Concluido: <strong>true</strong></p>
 ##
 </div>
 
 <div>
   <h2>RNF002 - Segurança dos Dados</h2>
-  <p>Descrição: O sistema deve garantir a segurança dos dados dos usuários, protegendo informações sensíveis durante a transmissão e o armazenamento.</p>
+  <p>Descrição: O sistema deve garantir a segurança dos dados dos usuários, protegendo informações sensíveis durante a transmissão e o armazenamento. </p>
   <p>Critérios de Aceitação:</p>
   <ul>
     <li>Todos os dados sensíveis (como informações de pagamento e dados pessoais) devem ser criptografados .</li>
-    <li>O sistema deve exigir autenticação de dois fatores para acessos administrativos.</li>
+    <li>O sistema deve exigir autenticação de dois fatores para acessos administrativos ✅.</li>
   </ul>
   <p>Prioridade: <strong>Alta</strong></p>
   <p>Concluido: <strong>false</strong></p>
@@ -370,11 +371,11 @@
   <p>Descrição: O sistema deve oferecer uma experiência de usuário simples e intuitiva, além de ser acessível para pessoas com deficiências.</p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>O sistema deve ter uma interface amigável, permitindo que qualquer novo usuário realize tarefas básicas sem necessidade de treinamento.</li>
-    <li>O sistema deve ser totalmente acessível para pessoas com deficiências.</li>
+    <li>O sistema deve ter uma interface amigável, permitindo que qualquer novo usuário realize tarefas básicas sem necessidade de treinamento ✅.</li>
+    <li>O sistema deve ser totalmente acessível para pessoas com deficiências. ✅</li>
   </ul>
   <p>Prioridade: <strong>Alta</strong></p>
-  <p>Concluido: <strong>false</strong></p>
+  <p>Concluido: <strong>true</strong></p>
 ##
 </div>
 
@@ -383,10 +384,10 @@
   <p>Descrição: O sistema deve ser escalável para acomodar o crescimento do número de usuários e dados sem comprometer o desempenho.</p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>O sistema deve permitir a adição de novos servidores e recursos de forma fácil e sem interrupção do serviço.</li>
+    <li>O sistema deve permitir a adição de novos servidores e recursos de forma fácil e sem interrupção do serviço. ✅</li>
   </ul>
   <p>Prioridade: <strong>Alta</strong></p>
-  <p>Concluido: <strong>false</strong></p>
+  <p>Concluido: <strong>true</strong></p>
 ##
 </div>
 
@@ -395,11 +396,11 @@
   <p>Descrição: O sistema deve garantir alta disponibilidade, minimizando períodos de inatividade.</p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>O sistema deve estar disponível 99,9% do tempo</li>
-    <li>Em caso de falha, o sistema deve ter mecanismos de recuperação automática para minimizar o impacto para os usuários.</li>
+    <li>O sistema deve estar disponível 99,9% do tempo ✅</li>
+    <li>Em caso de falha, o sistema deve ter mecanismos de recuperação automática para minimizar o impacto para os usuários. ✅</li>
   </ul>
   <p>Prioridade: <strong>Alta</strong></p>
-  <p>Concluido: <strong>false</strong></p>
+  <p>Concluido: <strong>true</strong></p>
 ##
 </div>
 
@@ -408,11 +409,11 @@
   <p>Descrição: O sistema deve ser compatível com os navegadores mais usados, garantindo boa experiência de usuário independentemente da plataforma.</p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>O sistema deve funcionar corretamente nas versões mais recentes do Google Chrome, Mozilla Firefox, Safari e Microsoft Edge.</li>
-    <li>O sistema deve ser responsivo e adaptar-se adequadamente a diferentes tamanhos de tela, incluindo dispositivos móveis.</li>
+    <li>O sistema deve funcionar corretamente nas versões mais recentes do Google Chrome, Mozilla Firefox, Safari e Microsoft Edge. ✅</li>
+    <li>O sistema deve ser responsivo e adaptar-se adequadamente a diferentes tamanhos de tela, incluindo dispositivos móveis. ✅</li>
   </ul>
   <p>Prioridade: <strong>Média</strong></p>
-  <p>Concluido: <strong>false</strong></p>
+  <p>Concluido: <strong>true</strong></p>
 ##
 </div>
 
@@ -421,8 +422,8 @@
   <p>Descrição: O sistema deve ser fácil de manter, com um código-fonte bem estruturado e documentado.</p>
   <p>Critérios de Aceitação:</p>
   <ul>
-    <li>O código-fonte deve ser modular, permitindo que desenvolvedores adicionem ou modifiquem funcionalidades sem causar impacto nas demais partes do sistema.</li>
-    <li>O código deve ser bem documentado, com comentários claros sobre a lógica de funcionamento e instruções para modificações futuras.</li>
+    <li>O código-fonte deve ser modular, permitindo que desenvolvedores adicionem ou modifiquem funcionalidades sem causar impacto nas demais partes do sistema. ✅</li>
+    <li>O código deve ser bem documentado, com comentários claros sobre a lógica de funcionamento e instruções para modificações futuras. ✅</li>
   </ul>
   <p>Prioridade: <strong>Média</strong></p>
   <p>Concluido: <strong>false</strong></p>
@@ -436,3 +437,128 @@
   <a href="https://www.figma.com/design/cS5OwI5VklAYnixpp1tDH5/Projeto-Burnout?node-id=0-1&t=h22oL0Hn9ENtmt0l-1">Figma</a>
 
 </div>
+
+
+<div> 
+<h1 id ="rotas">Rotas</h1>
+  
+<div>
+<h2>Criar um usuário</h2>
+
+<li>POST /api/sign</li>
+
+<ul>
+    <li>Cria um novo usuário.</li>
+</ul>
+
+<h2>Listar todos os usuários</h2>
+<li>GET /api/users</li>
+    <ul>
+        <li>Requer autenticação e permissão de administrador.</li>
+        <li>Retorna a lista de todos os usuários cadastrados.</li>
+    </ul>
+
+<h2>Obter dados do usuário autenticado</h2>
+    <li>GET /api/user</li>
+        <ul>
+            <li>Requer autenticação.</li>
+            <li>Retorna os dados do usuário autenticado.</li>
+        </ul>
+
+<h2>Fazer login</h2>
+    <ul>
+        <li>POST /api/login</li>
+        <li>Permite que um usuário faça login na plataforma.</li>
+    </ul>
+
+<h2>Excluir o próprio usuário</h2>
+    <li>DELETE /api/user</li>
+    <ul>
+        <li>Requer autenticação.</li>
+        <li>Remove a conta do usuário autenticado.</li>
+    </ul>
+
+<h2>Excluir um usuário pelo ID</h2>
+    <li>DELETE /api/user/:id</li>
+    <ul>
+        <li>Requer autenticação e permissão de administrador.</li>
+        <li>Remove um usuário específico com base no ID.</li>
+    </ul>
+
+<h2>Atualizar dados do usuário autenticado</h2>
+    <ul>
+        <li>PUT /api/user</li>
+        <li>Requer autenticação.</li>
+        <li>Atualiza as informações do usuário autenticado.</li>
+    </ul>
+
+<h2>Verificar código</h2>
+    <ul>
+        <li>POST /api/code</li>
+        <li>Verifica um código de autenticação ou validação.</li>
+    </ul>
+
+<h2>Criar um produto</h2>
+    <ul>
+        <li>POST /api/produto</li>
+        <li>Requer autenticação e permissão de administrador.</li>
+        <li>Adiciona um novo produto ao catálogo.</li>
+    </ul>
+
+<h2>Listar todos os produtos</h2>
+    <ul>
+        <li>GET /api/produtos</li>
+        <li>Retorna a lista de todos os produtos cadastrados.</li>
+    </ul>
+
+<h2>Obter detalhes de um produto pelo ID</h2>
+    <ul>
+        <li>GET /api/produto/:id</li>
+        <li>Retorna os detalhes de um produto específico.</li>
+    </ul>
+
+<h2>Excluir um produto pelo ID</h2>
+    <ul>
+        <li>DELETE /api/produto/:id</li>
+        <li>Requer autenticação e permissão de administrador.</li>
+        <li>Remove um produto específico do catálogo.</li>
+    </ul>
+
+<h2>Atualizar um produto pelo ID</h2>
+    <ul>
+        <li>PUT /api/produto/:id</li>
+        <li>Requer autenticação e permissão de administrador.</li>
+        <li>Atualiza as informações de um produto.</li>
+    </ul>
+
+<h2>Adicionar ou incrementar um produto no carrinho</h2>
+    <ul>
+        <li>POST /api/user/:userId/cart/:produtoId</li>
+        <li>Requer autenticação.</li>
+        <li>Adiciona um produto ao carrinho do usuário ou incrementa a quantidade caso já esteja presente.</li>
+    </ul>
+
+<h2>Remover todos os itens de um determinado produto do carrinho</h2>
+    <li>DELETE /api/user/:userId/cart/:produtoId</li>
+    <ul>
+        <li>Requer autenticação.</li>
+        <li>Remove todas as unidades de um produto específico do carrinho do usuário.</li>
+    </ul>
+
+<h2>Obter os itens do carrinho de um usuário</h2>
+    <li>GET /api/user/:userId/cart</li>
+    <ul>
+        <li>Requer autenticação.</li>
+        <li>Retorna a lista de produtos presentes no carrinho do usuário.</li>
+    </ul>
+
+<h2>Atualizar o estado do carrinho do usuário</h2>
+    <li>PUT /api/user/:userId/cart</li>
+    <ul>
+        <li>Requer autenticação.</li>
+        <li>Atualiza o estado do carrinho, permitindo sincronização ou recuperação do estado anterior.</li>
+    </ul>
+</div>
+
+  
+
