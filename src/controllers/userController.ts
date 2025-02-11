@@ -6,7 +6,7 @@ import { sendVerificationCode } from "../services/sendVerificationCode"
 import { validatePasswordToCreateJWT, verifyJWT } from "../services/jwt"
 import { deleteCodeModel } from "../models/codeModel"
 import { handleCode } from "../services/createCode"
-
+import bcrypt from "bcrypt"
 
 export const CreateUser: RequestHandler = async (req, res) => {
 
@@ -77,6 +77,7 @@ export const login: RequestHandler = async (req, res) => {
     if (validation.success) {
         try {
             const user = await findUserModel("email", validation.data.email)
+
             if (user instanceof Error) {
                 res.status(HTTP_STATUS.BAD_REQUEST).json({ message: user.message })
                 return
@@ -100,6 +101,12 @@ export const login: RequestHandler = async (req, res) => {
 
             }
 
+            const comparedPassword = await bcrypt.compare(req.body.password, user.password)
+
+            if (!comparedPassword) {
+                res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Senha Incorreta" })
+                return
+            }
 
             const code = await handleCode(user)
 

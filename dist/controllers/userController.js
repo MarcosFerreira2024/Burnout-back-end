@@ -31,6 +31,7 @@ const sendVerificationCode_1 = require("../services/sendVerificationCode");
 const jwt_1 = require("../services/jwt");
 const codeModel_1 = require("../models/codeModel");
 const createCode_1 = require("../services/createCode");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const CreateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     // pegar os dados
@@ -103,6 +104,11 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 res.status(HttpStatus_1.default.OK).json({
                     token: jwt
                 });
+                return;
+            }
+            const comparedPassword = yield bcrypt_1.default.compare(req.body.password, user.password);
+            if (!comparedPassword) {
+                res.status(HttpStatus_1.default.BAD_REQUEST).json({ message: "Senha Incorreta" });
                 return;
             }
             const code = yield (0, createCode_1.handleCode)(user);
