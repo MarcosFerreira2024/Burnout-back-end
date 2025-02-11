@@ -6,6 +6,7 @@
   <a href="#requisitosFuncionais">Requisitos Funcionais</a>
   <a href="#requisitosNaoFuncionais">Requisitos Não Funcionais</a>
   <a href="#prototipo">Protótipo</a>
+  <a href="#rotas">Rotas </a>
 </div>
 
 
@@ -436,3 +437,128 @@
   <a href="https://www.figma.com/design/cS5OwI5VklAYnixpp1tDH5/Projeto-Burnout?node-id=0-1&t=h22oL0Hn9ENtmt0l-1">Figma</a>
 
 </div>
+
+
+<div> 
+<h1 id ="rotas">Rotas</h1>
+  
+<div>
+<h2>Criar um usuário</h2>
+
+<li>POST /api/sign</li>
+
+<ul>
+    <li>Cria um novo usuário.</li>
+</ul>
+
+<h2>Listar todos os usuários</h2>
+<li>GET /api/users</li>
+    <ul>
+        <li>Requer autenticação e permissão de administrador.</li>
+        <li>Retorna a lista de todos os usuários cadastrados.</li>
+    </ul>
+
+<h2>Obter dados do usuário autenticado</h2>
+    <li>GET /api/user</li>
+        <ul>
+            <li>Requer autenticação.</li>
+            <li>Retorna os dados do usuário autenticado.</li>
+        </ul>
+
+<h2>Fazer login</h2>
+    <ul>
+        <li>POST /api/login</li>
+        <li>Permite que um usuário faça login na plataforma.</li>
+    </ul>
+
+<h2>Excluir o próprio usuário</h2>
+    <li>DELETE /api/user</li>
+    <ul>
+        <li>Requer autenticação.</li>
+        <li>Remove a conta do usuário autenticado.</li>
+    </ul>
+
+<h2>Excluir um usuário pelo ID</h2>
+    <li>DELETE /api/user/:id</li>
+    <ul>
+        <li>Requer autenticação e permissão de administrador.</li>
+        <li>Remove um usuário específico com base no ID.</li>
+    </ul>
+
+<h2>Atualizar dados do usuário autenticado</h2>
+    <ul>
+        <li>PUT /api/user</li>
+        <li>Requer autenticação.</li>
+        <li>Atualiza as informações do usuário autenticado.</li>
+    </ul>
+
+<h2>Verificar código</h2>
+    <ul>
+        <li>POST /api/code</li>
+        <li>Verifica um código de autenticação ou validação.</li>
+    </ul>
+
+<h2>Criar um produto</h2>
+    <ul>
+        <li>POST /api/produto</li>
+        <li>Requer autenticação e permissão de administrador.</li>
+        <li>Adiciona um novo produto ao catálogo.</li>
+    </ul>
+
+<h2>Listar todos os produtos</h2>
+    <ul>
+        <li>GET /api/produtos</li>
+        <li>Retorna a lista de todos os produtos cadastrados.</li>
+    </ul>
+
+<h2>Obter detalhes de um produto pelo ID</h2>
+    <ul>
+        <li>GET /api/produto/:id</li>
+        <li>Retorna os detalhes de um produto específico.</li>
+    </ul>
+
+<h2>Excluir um produto pelo ID</h2>
+    <ul>
+        <li>DELETE /api/produto/:id</li>
+        <li>Requer autenticação e permissão de administrador.</li>
+        <li>Remove um produto específico do catálogo.</li>
+    </ul>
+
+<h2>Atualizar um produto pelo ID</h2>
+    <ul>
+        <li>PUT /api/produto/:id</li>
+        <li>Requer autenticação e permissão de administrador.</li>
+        <li>Atualiza as informações de um produto.</li>
+    </ul>
+
+<h2>Adicionar ou incrementar um produto no carrinho</h2>
+    <ul>
+        <li>POST /api/user/:userId/cart/:produtoId</li>
+        <li>Requer autenticação.</li>
+        <li>Adiciona um produto ao carrinho do usuário ou incrementa a quantidade caso já esteja presente.</li>
+    </ul>
+
+<h2>Remover todos os itens de um determinado produto do carrinho</h2>
+    <li>DELETE /api/user/:userId/cart/:produtoId</li>
+    <ul>
+        <li>Requer autenticação.</li>
+        <li>Remove todas as unidades de um produto específico do carrinho do usuário.</li>
+    </ul>
+
+<h2>Obter os itens do carrinho de um usuário</h2>
+    <li>GET /api/user/:userId/cart</li>
+    <ul>
+        <li>Requer autenticação.</li>
+        <li>Retorna a lista de produtos presentes no carrinho do usuário.</li>
+    </ul>
+
+<h2>Atualizar o estado do carrinho do usuário</h2>
+    <li>PUT /api/user/:userId/cart</li>
+    <ul>
+        <li>Requer autenticação.</li>
+        <li>Atualiza o estado do carrinho, permitindo sincronização ou recuperação do estado anterior.</li>
+    </ul>
+</div>
+
+  
+
