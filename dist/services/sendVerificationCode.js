@@ -104,7 +104,7 @@ const sendVerificationCode = (email, code) => __awaiter(void 0, void 0, void 0, 
                     <tr>
                         <td class="content" align="center" valign="top">
                             <p>Seu código de verificação é:</p>
-                            <div class="code">67a01219042a4d8df9dc70bf</div>
+                            <div class="code">${code}</div>
                             <p>Use este código para validar sua conta.</p>
                         </td>
                     </tr>
